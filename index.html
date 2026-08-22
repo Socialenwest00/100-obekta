@@ -1,141 +1,559 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1b5e20">
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1b5e20">
+
   <title>100-те национални обекта</title>
 
   <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      background: #f3f5f3;
       color: #222;
     }
 
     header {
       background: #1b5e20;
       color: white;
-      padding: 20px;
+      padding: 22px 18px;
       text-align: center;
     }
 
-    h1 {
-      margin: 0 0 10px;
+    header h1 {
+      margin: 0 0 8px;
       font-size: 24px;
     }
 
-    #progress {
-      font-size: 18px;
+    header p {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 12px;
+      background: white;
+    }
+
+    .stat {
+      text-align: center;
+      background: #f1f5f1;
+      border-radius: 10px;
+      padding: 10px 5px;
+    }
+
+    .stat-number {
+      font-size: 21px;
+      font-weight: bold;
+      color: #1b5e20;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .container {
+      padding: 12px;
+      max-width: 700px;
+      margin: auto;
     }
 
     .place {
       background: white;
-      margin: 15px;
+      border-radius: 15px;
+      margin-bottom: 15px;
       padding: 18px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
     .place h2 {
-      margin-top: 0;
+      margin: 0 0 5px;
+      font-size: 20px;
     }
 
-    button {
-      border: none;
-      border-radius: 8px;
-      padding: 12px 18px;
+    .place-number {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    .not-visited {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .visited {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      margin: 12px 0;
       font-size: 16px;
       cursor: pointer;
     }
 
-    .not-visited {
-      background: #d32f2f;
-      color: white;
+    .option input {
+      width: 21px;
+      height: 21px;
+      margin-right: 10px;
+      accent-color: #2e7d32;
     }
 
-    .visited {
-      background: #2e7d32;
-      color: white;
+    .date-area {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
     }
+
+    .date-area label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 7px;
+    }
+
+    .date-area input {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .location {
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    .progress {
+      height: 10px;
+      background: #ddd;
+      border-radius: 10px;
+      margin: 10px 12px 18px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #2e7d32;
+      transition: width 0.3s;
+    }
+
+    footer {
+      text-align: center;
+      color: #777;
+      font-size: 12px;
+      padding: 25px;
+    }
+
   </style>
+
 </head>
 
 <body>
 
 <header>
+
   <h1>🇧🇬 100-те национални обекта</h1>
-  <div id="progress">Посетени: 0 / 2</div>
+
+  <p>Моят личен туристически дневник</p>
+
 </header>
 
-<div class="place">
-  <h2>📍 Рилски манастир</h2>
-  <p>Рилски манастир „Св. Иван Рилски“</p>
 
-  <button id="button-1"
-          class="not-visited"
-          onclick="toggleVisited(1)">
-    ❌ Не съм посещавал
-  </button>
+<div class="stats">
+
+  <div class="stat">
+    <div class="stat-number" id="visitedCount">0</div>
+    <div class="stat-label">Посетени</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-number" id="stampCount">0</div>
+    <div class="stat-label">Печати</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-number" id="markCount">0</div>
+    <div class="stat-label">Марки</div>
+  </div>
+
 </div>
 
-<div class="place">
-  <h2>📍 Монумент „Св. Богородица“ – Хасково</h2>
-  <p>Хасково</p>
 
-  <button id="button-2"
-          class="not-visited"
-          onclick="toggleVisited(2)">
-    ❌ Не съм посещавал
-  </button>
+<div class="progress">
+  <div class="progress-bar" id="progressBar"></div>
 </div>
+
+
+<div class="container">
+
+
+  <!-- РИЛСКИ МАНАСТИР -->
+
+  <div class="place">
+
+    <div class="place-number">
+      Обект №1
+    </div>
+
+    <h2>Рилски манастир</h2>
+
+    <div class="location">
+      📍 Рилски манастир
+    </div>
+
+    <div id="status-1"
+         class="status not-visited">
+      🔴 Не е посетен
+    </div>
+
+
+    <label class="option">
+
+      <input
+        type="checkbox"
+        id="visited-1"
+        onchange="saveObject(1)">
+
+      <span>Посетен</span>
+
+    </label>
+
+
+    <label class="option">
+
+      <input
+        type="checkbox"
+        id="stamp-1"
+        onchange="saveObject(1)">
+
+      <span>🖋️ Имам печат</span>
+
+    </label>
+
+
+    <label class="option">
+
+      <input
+        type="checkbox"
+        id="mark-1"
+        onchange="saveObject(1)">
+
+      <span>🎫 Имам марка</span>
+
+    </label>
+
+
+    <div class="date-area">
+
+      <label for="date-1">
+        📅 Дата на посещение
+      </label>
+
+      <input
+        type="date"
+        id="date-1"
+        onchange="saveObject(1)">
+
+    </div>
+
+  </div>
+
+
+
+  <!-- БОГОРОДИЦА ХАСКОВО -->
+
+  <div class="place">
+
+    <div class="place-number">
+      Обект №72
+    </div>
+
+    <h2>Монумент „Св. Богородица“</h2>
+
+    <div class="location">
+      📍 Хасково
+    </div>
+
+    <div id="status-2"
+         class="status not-visited">
+      🔴 Не е посетен
+    </div>
+
+
+    <label class="option">
+
+      <input
+        type="checkbox"
+        id="visited-2"
+        onchange="saveObject(2)">
+
+      <span>Посетен</span>
+
+    </label>
+
+
+    <label class="option">
+
+      <input
+        type="checkbox"
+        id="stamp-2"
+        onchange="saveObject(2)">
+
+      <span>🖋️ Имам печат</span>
+
+    </label>
+
+
+    <label class="option">
+
+      <input
+        type="checkbox"
+        id="mark-2"
+        onchange="saveObject(2)">
+
+      <span>🎫 Имам марка</span>
+
+    </label>
+
+
+    <div class="date-area">
+
+      <label for="date-2">
+        📅 Дата на посещение
+      </label>
+
+      <input
+        type="date"
+        id="date-2"
+        onchange="saveObject(2)">
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<footer>
+  Личен туристически дневник 🇧🇬
+</footer>
+
 
 <script>
-  let visited =
-    JSON.parse(localStorage.getItem("visited") || "[]");
 
-  function updatePage() {
-    document.getElementById("progress").innerText =
-      "Посетени: " + visited.length + " / 2";
+  const objectIds = [1, 2];
 
-    for (let id = 1; id <= 2; id++) {
-      const button =
-        document.getElementById("button-" + id);
 
-      if (visited.includes(id)) {
-        button.className = "visited";
-        button.innerText = "✅ Посетено";
-      } else {
-        button.className = "not-visited";
-        button.innerText = "❌ Не съм посещавал";
-      }
-    }
-  }
+  function saveObject(id) {
 
-  function toggleVisited(id) {
-    if (visited.includes(id)) {
-      visited = visited.filter(item => item !== id);
-    } else {
-      visited.push(id);
-    }
+    const data = {
+
+      visited:
+        document.getElementById(
+          "visited-" + id
+        ).checked,
+
+      stamp:
+        document.getElementById(
+          "stamp-" + id
+        ).checked,
+
+      mark:
+        document.getElementById(
+          "mark-" + id
+        ).checked,
+
+      date:
+        document.getElementById(
+          "date-" + id
+        ).value
+
+    };
+
 
     localStorage.setItem(
-      "visited",
-      JSON.stringify(visited)
+      "object-" + id,
+      JSON.stringify(data)
     );
 
-    updatePage();
+
+    updateObject(id);
+
+    updateStats();
+
   }
 
-  updatePage();
-</script>
 
-  <script>
+
+  function updateObject(id) {
+
+    const saved =
+      JSON.parse(
+        localStorage.getItem(
+          "object-" + id
+        ) || "{}"
+      );
+
+
+    document.getElementById(
+      "visited-" + id
+    ).checked =
+      saved.visited || false;
+
+
+    document.getElementById(
+      "stamp-" + id
+    ).checked =
+      saved.stamp || false;
+
+
+    document.getElementById(
+      "mark-" + id
+    ).checked =
+      saved.mark || false;
+
+
+    document.getElementById(
+      "date-" + id
+    ).value =
+      saved.date || "";
+
+
+    const status =
+      document.getElementById(
+        "status-" + id
+      );
+
+
+    if (saved.visited) {
+
+      status.className =
+        "status visited";
+
+      status.innerText =
+        "🟢 Посетен";
+
+    } else {
+
+      status.className =
+        "status not-visited";
+
+      status.innerText =
+        "🔴 Не е посетен";
+
+    }
+
+  }
+
+
+
+  function updateStats() {
+
+    let visited = 0;
+    let stamps = 0;
+    let marks = 0;
+
+
+    objectIds.forEach(id => {
+
+      const saved =
+        JSON.parse(
+          localStorage.getItem(
+            "object-" + id
+          ) || "{}"
+        );
+
+
+      if (saved.visited)
+        visited++;
+
+
+      if (saved.stamp)
+        stamps++;
+
+
+      if (saved.mark)
+        marks++;
+
+    });
+
+
+    document.getElementById(
+      "visitedCount"
+    ).innerText = visited;
+
+
+    document.getElementById(
+      "stampCount"
+    ).innerText = stamps;
+
+
+    document.getElementById(
+      "markCount"
+    ).innerText = marks;
+
+
+    const percentage =
+      (visited / objectIds.length) * 100;
+
+
+    document.getElementById(
+      "progressBar"
+    ).style.width =
+      percentage + "%";
+
+  }
+
+
+
+  objectIds.forEach(id => {
+
+    updateObject(id);
+
+  });
+
+
+  updateStats();
+
+
+
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js");
+
+    navigator.serviceWorker.register(
+      "./service-worker.js"
+    );
+
   }
+
 </script>
 
 </body>
