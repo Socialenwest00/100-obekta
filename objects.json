@@ -1,20 +1,146 @@
 [
   {
-    "id": 1,
+    "id": "1-velyanova",
     "number": "1",
-    "name": "Рилски манастир",
-    "city": "Рилски манастир",
-    "lat": 42.1337,
-    "lng": 23.3402,
+    "name": "Велянова къща",
+    "city": "Банско",
+    "lat": null,
+    "lng": null,
     "hasStamp": true
   },
   {
-    "id": 2,
+    "id": "1-nikola-vaptsarov",
+    "number": "1",
+    "name": "Дом-музей „Никола Вапцаров“",
+    "city": "Банско",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "1-neofit-rilski",
+    "number": "1",
+    "name": "Музеен комплекс „Неофит Рилски“",
+    "city": "Банско",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "1-bansko",
+    "number": "1",
+    "name": "Историко-етнографски комплекс „Радонова къща“",
+    "city": "Банско",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "2-nesebar",
+    "number": "2",
+    "name": "Старинен Несебър",
+    "city": "Несебър",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "72-bogorodica",
     "number": "72",
-    "name": "Монумент „Св. Богородица“",
+    "name": "Монумент „Света Богородица“",
     "city": "Хасково",
     "lat": 41.9277,
     "lng": 25.5557,
+    "hasStamp": true
+  },
+  {
+    "id": "72a-mezek-fortress",
+    "number": "72а",
+    "name": "Средновековна крепост „Неутзикон“",
+    "city": "Мезек",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "72a-mezek-tomb",
+    "number": "72а",
+    "name": "Тракийска куполна гробница",
+    "city": "Мезек",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "72b-armira",
+    "number": "72б",
+    "name": "Антична вила „Армира“",
+    "city": "Ивайловград",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "24v-durankulak",
+    "number": "24в",
+    "name": "Археологически комплекс „Дуранкулак–Хаманджия“",
+    "city": "Дуранкулак",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "54b-tuida",
+    "number": "54б",
+    "name": "Антична и средновековна крепост „Туида“",
+    "city": "Сливен",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "84-agushevi",
+    "number": "84",
+    "name": "Агушеви конаци",
+    "city": "Могилица",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "41b-philippopolis",
+    "number": "41б",
+    "name": "Епископска базилика на Филипопол",
+    "city": "Пловдив",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "81a-popovo",
+    "number": "81а",
+    "name": "Исторически музей",
+    "city": "Попово",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "85a-rozhen",
+    "number": "85а",
+    "name": "Национална астрономическа обсерватория „Рожен“",
+    "city": "Рожен",
+    "lat": null,
+    "lng": null,
+    "hasStamp": true
+  },
+  {
+    "id": "94-biserna",
+    "number": "94",
+    "name": "Пещера „Бисерна“",
+    "city": "Шумен",
+    "lat": null,
+    "lng": null,
     "hasStamp": true
   }
 ]
