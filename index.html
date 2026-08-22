@@ -1,93 +1,136 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-
   <meta charset="UTF-8">
-
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1b5e20">
+  <meta name="theme-color" content="#166534">
 
-  <title>100-те национални обекта</title>
+  <title>100 НТО 🇧🇬</title>
+
+  <!-- Leaflet -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
 
   <style>
-
     * {
       box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f5f3;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background: #f5f5f5;
       color: #222;
     }
 
+    #app {
+      min-height: 100vh;
+      padding-bottom: 70px;
+    }
+
     header {
-      background: #1b5e20;
+      background: #166534;
       color: white;
-      padding: 22px 18px;
+      padding: 16px;
       text-align: center;
     }
 
     header h1 {
-      margin: 0 0 8px;
-      font-size: 24px;
+      margin: 0;
+      font-size: 22px;
     }
 
     header p {
-      margin: 0;
-      opacity: 0.9;
+      margin: 5px 0 0;
+      opacity: .9;
+      font-size: 13px;
     }
 
-    .stats {
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    #map {
+      width: 100%;
+      height: calc(100vh - 139px);
+      min-height: 500px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 65px;
+      background: white;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      padding: 12px;
+      border-top: 1px solid #ddd;
+      z-index: 9999;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .nav-button {
+      border: none;
       background: white;
-    }
-
-    .stat {
-      text-align: center;
-      background: #f1f5f1;
-      border-radius: 10px;
-      padding: 10px 5px;
-    }
-
-    .stat-number {
-      font-size: 21px;
-      font-weight: bold;
-      color: #1b5e20;
-    }
-
-    .stat-label {
       font-size: 12px;
-      margin-top: 3px;
+      color: #555;
     }
 
-    .container {
-      padding: 12px;
+    .nav-button.active {
+      color: #166534;
+      font-weight: bold;
+    }
+
+    .nav-icon {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 2px;
+    }
+
+    .content {
       max-width: 700px;
       margin: auto;
+      padding: 12px;
     }
 
-    .place {
+    .search {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .object-card {
       background: white;
-      border-radius: 15px;
-      margin-bottom: 15px;
-      padding: 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 7px rgba(0,0,0,.08);
     }
 
-    .place h2 {
-      margin: 0 0 5px;
-      font-size: 20px;
+    .object-number {
+      color: #777;
+      font-size: 13px;
+      margin-bottom: 5px;
     }
 
-    .place-number {
+    .object-card h2 {
+      font-size: 18px;
+      margin: 0 0 6px;
+    }
+
+    .location {
       color: #666;
       font-size: 14px;
       margin-bottom: 12px;
@@ -98,461 +141,651 @@
       padding: 6px 10px;
       border-radius: 20px;
       font-size: 13px;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
-    .not-visited {
+    .status.no {
       background: #ffebee;
       color: #c62828;
     }
 
-    .visited {
+    .status.yes {
       background: #e8f5e9;
       color: #2e7d32;
     }
 
-    .option {
+    .checks {
+      display: grid;
+      gap: 9px;
+    }
+
+    .check {
       display: flex;
       align-items: center;
-      margin: 12px 0;
-      font-size: 16px;
-      cursor: pointer;
+      gap: 9px;
+      font-size: 15px;
     }
 
-    .option input {
-      width: 21px;
-      height: 21px;
-      margin-right: 10px;
-      accent-color: #2e7d32;
+    .check input {
+      width: 20px;
+      height: 20px;
+      accent-color: #166534;
     }
 
-    .date-area {
-      margin-top: 15px;
-      padding-top: 15px;
-      border-top: 1px solid #eee;
-    }
-
-    .date-area label {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 7px;
-    }
-
-    .date-area input {
+    .date {
       width: 100%;
-      padding: 11px;
+      margin-top: 12px;
+      padding: 10px;
       border: 1px solid #ccc;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 15px;
     }
 
-    .location {
-      color: #555;
-      margin-bottom: 15px;
+    .note {
+      width: 100%;
+      min-height: 70px;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-family: inherit;
+      resize: vertical;
     }
 
-    .progress {
-      height: 10px;
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      background: white;
+      border-radius: 14px;
+      padding: 18px 10px;
+      text-align: center;
+      box-shadow: 0 2px 7px rgba(0,0,0,.07);
+    }
+
+    .stat-number {
+      font-size: 28px;
+      font-weight: bold;
+      color: #166534;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .progress-container {
       background: #ddd;
-      border-radius: 10px;
-      margin: 10px 12px 18px;
+      border-radius: 20px;
+      height: 13px;
       overflow: hidden;
+      margin-top: 15px;
     }
 
     .progress-bar {
       height: 100%;
       width: 0%;
-      background: #2e7d32;
-      transition: width 0.3s;
+      background: #166534;
+      transition: width .3s;
     }
 
-    footer {
-      text-align: center;
-      color: #777;
-      font-size: 12px;
-      padding: 25px;
+    .achievement {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 15px;
+      box-shadow: 0 2px 7px rgba(0,0,0,.07);
     }
 
+    .achievement h2 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+
+    .achievement-row {
+      padding: 9px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .achievement-row:last-child {
+      border-bottom: none;
+    }
+
+    .leaflet-popup-content {
+      font-size: 14px;
+    }
+
+    .map-popup-title {
+      font-weight: bold;
+      font-size: 15px;
+      margin-bottom: 5px;
+    }
   </style>
-
 </head>
 
 <body>
 
-<header>
+<div id="app">
 
-  <h1>🇧🇬 100-те национални обекта</h1>
+  <header>
+    <h1>🇧🇬 100 НТО</h1>
+    <p>Моят личен туристически дневник</p>
+  </header>
 
-  <p>Моят личен туристически дневник</p>
+  <!-- MAP -->
+  <section id="mapScreen" class="screen active">
+    <div id="map"></div>
+  </section>
 
-</header>
+  <!-- OBJECTS -->
+  <section id="objectsScreen" class="screen">
+    <div class="content">
 
+      <input
+        id="search"
+        class="search"
+        type="search"
+        placeholder="🔎 Търси обект..."
+        oninput="renderObjects()"
+      >
 
-<div class="stats">
+      <div id="objectList"></div>
 
-  <div class="stat">
-    <div class="stat-number" id="visitedCount">0</div>
-    <div class="stat-label">Посетени</div>
-  </div>
+    </div>
+  </section>
 
-  <div class="stat">
-    <div class="stat-number" id="stampCount">0</div>
-    <div class="stat-label">Печати</div>
-  </div>
+  <!-- PROGRESS -->
+  <section id="progressScreen" class="screen">
+    <div class="content">
 
-  <div class="stat">
-    <div class="stat-number" id="markCount">0</div>
-    <div class="stat-label">Марки</div>
-  </div>
+      <div class="stats-grid">
+
+        <div class="stat">
+          <div id="visitedCount" class="stat-number">0</div>
+          <div class="stat-label">🟢 Посетени</div>
+        </div>
+
+        <div class="stat">
+          <div id="stampCount" class="stat-number">0</div>
+          <div class="stat-label">🖋️ Печати</div>
+        </div>
+
+        <div class="stat">
+          <div id="markCount" class="stat-number">0</div>
+          <div class="stat-label">🎫 Марки</div>
+        </div>
+
+        <div class="stat">
+          <div id="completeCount" class="stat-number">0</div>
+          <div class="stat-label">⭐ Пълен комплект</div>
+        </div>
+
+      </div>
+
+      <div class="achievement">
+
+        <h2>🏆 Прогрес</h2>
+
+        <div id="achievementText">
+          Започни своето приключение!
+        </div>
+
+        <div class="progress-container">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
 
 </div>
 
 
-<div class="progress">
-  <div class="progress-bar" id="progressBar"></div>
-</div>
+<!-- BOTTOM NAV -->
+
+<nav class="bottom-nav">
+
+  <button
+    id="navMap"
+    class="nav-button active"
+    onclick="showScreen('map')">
+
+    <span class="nav-icon">🗺️</span>
+    Карта
+
+  </button>
+
+  <button
+    id="navObjects"
+    class="nav-button"
+    onclick="showScreen('objects')">
+
+    <span class="nav-icon">📋</span>
+    Обекти
+
+  </button>
+
+  <button
+    id="navProgress"
+    class="nav-button"
+    onclick="showScreen('progress')">
+
+    <span class="nav-icon">🏆</span>
+    Прогрес
+
+  </button>
+
+</nav>
 
 
-<div class="container">
+<!-- LEAFLET -->
 
-
-  <!-- РИЛСКИ МАНАСТИР -->
-
-  <div class="place">
-
-    <div class="place-number">
-      Обект №1
-    </div>
-
-    <h2>Рилски манастир</h2>
-
-    <div class="location">
-      📍 Рилски манастир
-    </div>
-
-    <div id="status-1"
-         class="status not-visited">
-      🔴 Не е посетен
-    </div>
-
-
-    <label class="option">
-
-      <input
-        type="checkbox"
-        id="visited-1"
-        onchange="saveObject(1)">
-
-      <span>Посетен</span>
-
-    </label>
-
-
-    <label class="option">
-
-      <input
-        type="checkbox"
-        id="stamp-1"
-        onchange="saveObject(1)">
-
-      <span>🖋️ Имам печат</span>
-
-    </label>
-
-
-    <label class="option">
-
-      <input
-        type="checkbox"
-        id="mark-1"
-        onchange="saveObject(1)">
-
-      <span>🎫 Имам марка</span>
-
-    </label>
-
-
-    <div class="date-area">
-
-      <label for="date-1">
-        📅 Дата на посещение
-      </label>
-
-      <input
-        type="date"
-        id="date-1"
-        onchange="saveObject(1)">
-
-    </div>
-
-  </div>
-
-
-
-  <!-- БОГОРОДИЦА ХАСКОВО -->
-
-  <div class="place">
-
-    <div class="place-number">
-      Обект №72
-    </div>
-
-    <h2>Монумент „Св. Богородица“</h2>
-
-    <div class="location">
-      📍 Хасково
-    </div>
-
-    <div id="status-2"
-         class="status not-visited">
-      🔴 Не е посетен
-    </div>
-
-
-    <label class="option">
-
-      <input
-        type="checkbox"
-        id="visited-2"
-        onchange="saveObject(2)">
-
-      <span>Посетен</span>
-
-    </label>
-
-
-    <label class="option">
-
-      <input
-        type="checkbox"
-        id="stamp-2"
-        onchange="saveObject(2)">
-
-      <span>🖋️ Имам печат</span>
-
-    </label>
-
-
-    <label class="option">
-
-      <input
-        type="checkbox"
-        id="mark-2"
-        onchange="saveObject(2)">
-
-      <span>🎫 Имам марка</span>
-
-    </label>
-
-
-    <div class="date-area">
-
-      <label for="date-2">
-        📅 Дата на посещение
-      </label>
-
-      <input
-        type="date"
-        id="date-2"
-        onchange="saveObject(2)">
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<footer>
-  Личен туристически дневник 🇧🇬
-</footer>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
 
 
 <script>
 
-  const objectIds = [1, 2];
+const objects = [
+
+  {
+    id: 1,
+    number: "1",
+    name: "Рилски манастир",
+    city: "Рилски манастир",
+    lat: 42.1337,
+    lng: 23.3402
+  },
+
+  {
+    id: 2,
+    number: "72",
+    name: "Монумент „Св. Богородица“",
+    city: "Хасково",
+    lat: 41.9277,
+    lng: 25.5557
+  }
+
+];
 
 
-  function saveObject(id) {
-
-    const data = {
-
-      visited:
-        document.getElementById(
-          "visited-" + id
-        ).checked,
-
-      stamp:
-        document.getElementById(
-          "stamp-" + id
-        ).checked,
-
-      mark:
-        document.getElementById(
-          "mark-" + id
-        ).checked,
-
-      date:
-        document.getElementById(
-          "date-" + id
-        ).value
-
-    };
+let map;
+let markers = [];
 
 
-    localStorage.setItem(
-      "object-" + id,
-      JSON.stringify(data)
+function getData(id) {
+
+  return JSON.parse(
+    localStorage.getItem("object-" + id) || "{}"
+  );
+
+}
+
+
+function saveData(id, data) {
+
+  localStorage.setItem(
+    "object-" + id,
+    JSON.stringify(data)
+  );
+
+}
+
+
+function updateObject(id, field, value) {
+
+  const data = getData(id);
+
+  data[field] = value;
+
+  saveData(id, data);
+
+  updateEverything();
+
+}
+
+
+function renderObjects() {
+
+  const search =
+    document.getElementById("search")
+      .value
+      .toLowerCase();
+
+  const list =
+    document.getElementById("objectList");
+
+  list.innerHTML = "";
+
+  objects
+    .filter(object =>
+      (object.name + " " + object.city + " " + object.number)
+        .toLowerCase()
+        .includes(search)
+    )
+    .forEach(object => {
+
+      const data = getData(object.id);
+
+      const card =
+        document.createElement("div");
+
+      card.className = "object-card";
+
+      card.innerHTML = `
+
+        <div class="object-number">
+          Обект №${object.number}
+        </div>
+
+        <h2>${object.name}</h2>
+
+        <div class="location">
+          📍 ${object.city}
+        </div>
+
+        <div class="status ${data.visited ? "yes" : "no"}">
+          ${data.visited ? "🟢 Посетен" : "🔴 Не е посетен"}
+        </div>
+
+        <div class="checks">
+
+          <label class="check">
+            <input
+              type="checkbox"
+              ${data.visited ? "checked" : ""}
+              onchange="updateObject(${object.id}, 'visited', this.checked)"
+            >
+            Посетен
+          </label>
+
+          <label class="check">
+            <input
+              type="checkbox"
+              ${data.stamp ? "checked" : ""}
+              onchange="updateObject(${object.id}, 'stamp', this.checked)"
+            >
+            🖋️ Имам печат
+          </label>
+
+          <label class="check">
+            <input
+              type="checkbox"
+              ${data.mark ? "checked" : ""}
+              onchange="updateObject(${object.id}, 'mark', this.checked)"
+            >
+            🎫 Имам марка
+          </label>
+
+        </div>
+
+        <input
+          class="date"
+          type="date"
+          value="${data.date || ""}"
+          onchange="updateObject(${object.id}, 'date', this.value)"
+        >
+
+        <textarea
+          class="note"
+          placeholder="📝 Моя бележка..."
+          onchange="updateObject(${object.id}, 'note', this.value)"
+        >${data.note || ""}</textarea>
+
+      `;
+
+      list.appendChild(card);
+
+    });
+
+}
+
+
+function updateStats() {
+
+  let visited = 0;
+  let stamps = 0;
+  let marks = 0;
+  let complete = 0;
+
+
+  objects.forEach(object => {
+
+    const data = getData(object.id);
+
+    if (data.visited)
+      visited++;
+
+    if (data.stamp)
+      stamps++;
+
+    if (data.mark)
+      marks++;
+
+    if (
+      data.visited &&
+      data.stamp &&
+      data.mark
+    ) {
+      complete++;
+    }
+
+  });
+
+
+  document.getElementById(
+    "visitedCount"
+  ).innerText = visited;
+
+
+  document.getElementById(
+    "stampCount"
+  ).innerText = stamps;
+
+
+  document.getElementById(
+    "markCount"
+  ).innerText = marks;
+
+
+  document.getElementById(
+    "completeCount"
+  ).innerText = complete;
+
+
+  const percentage =
+    (visited / objects.length) * 100;
+
+
+  document.getElementById(
+    "progressBar"
+  ).style.width =
+    percentage + "%";
+
+
+  if (visited >= 100) {
+
+    document.getElementById(
+      "achievementText"
+    ).innerText =
+      "🥇 100 посетени обекта!";
+
+  } else if (visited >= 50) {
+
+    document.getElementById(
+      "achievementText"
+    ).innerText =
+      "🥈 50 посетени обекта!";
+
+  } else if (visited >= 25) {
+
+    document.getElementById(
+      "achievementText"
+    ).innerText =
+      "🥉 25 посетени обекта!";
+
+  } else {
+
+    document.getElementById(
+      "achievementText"
+    ).innerText =
+      `Посетени: ${visited} / ${objects.length}`;
+
+  }
+
+}
+
+
+function createMap() {
+
+  map = L.map("map").setView(
+    [42.7339, 25.4858],
+    7
+  );
+
+
+  L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      attribution:
+        '&copy; OpenStreetMap contributors'
+    }
+  ).addTo(map);
+
+
+  objects.forEach(object => {
+
+    const data =
+      getData(object.id);
+
+
+    const marker =
+      L.marker([
+        object.lat,
+        object.lng
+      ]).addTo(map);
+
+
+    marker.bindPopup(`
+
+      <div class="map-popup-title">
+        ${object.name}
+      </div>
+
+      📍 ${object.city}<br>
+
+      ${data.visited
+        ? "🟢 Посетен"
+        : "🔴 Не е посетен"}
+
+    `);
+
+
+    markers.push({
+      object,
+      marker
+    });
+
+  });
+
+}
+
+
+function showScreen(screen) {
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(element =>
+      element.classList.remove("active")
     );
 
 
-    updateObject(id);
+  document
+    .querySelectorAll(".nav-button")
+    .forEach(element =>
+      element.classList.remove("active")
+    );
+
+
+  if (screen === "map") {
+
+    document
+      .getElementById("mapScreen")
+      .classList.add("active");
+
+    document
+      .getElementById("navMap")
+      .classList.add("active");
+
+
+    setTimeout(() => {
+
+      if (map)
+        map.invalidateSize();
+
+    }, 100);
+
+  }
+
+
+  if (screen === "objects") {
+
+    document
+      .getElementById("objectsScreen")
+      .classList.add("active");
+
+    document
+      .getElementById("navObjects")
+      .classList.add("active");
+
+    renderObjects();
+
+  }
+
+
+  if (screen === "progress") {
+
+    document
+      .getElementById("progressScreen")
+      .classList.add("active");
+
+    document
+      .getElementById("navProgress")
+      .classList.add("active");
 
     updateStats();
 
   }
 
+}
 
 
-  function updateObject(id) {
+function updateEverything() {
 
-    const saved =
-      JSON.parse(
-        localStorage.getItem(
-          "object-" + id
-        ) || "{}"
-      );
-
-
-    document.getElementById(
-      "visited-" + id
-    ).checked =
-      saved.visited || false;
-
-
-    document.getElementById(
-      "stamp-" + id
-    ).checked =
-      saved.stamp || false;
-
-
-    document.getElementById(
-      "mark-" + id
-    ).checked =
-      saved.mark || false;
-
-
-    document.getElementById(
-      "date-" + id
-    ).value =
-      saved.date || "";
-
-
-    const status =
-      document.getElementById(
-        "status-" + id
-      );
-
-
-    if (saved.visited) {
-
-      status.className =
-        "status visited";
-
-      status.innerText =
-        "🟢 Посетен";
-
-    } else {
-
-      status.className =
-        "status not-visited";
-
-      status.innerText =
-        "🔴 Не е посетен";
-
-    }
-
-  }
-
-
-
-  function updateStats() {
-
-    let visited = 0;
-    let stamps = 0;
-    let marks = 0;
-
-
-    objectIds.forEach(id => {
-
-      const saved =
-        JSON.parse(
-          localStorage.getItem(
-            "object-" + id
-          ) || "{}"
-        );
-
-
-      if (saved.visited)
-        visited++;
-
-
-      if (saved.stamp)
-        stamps++;
-
-
-      if (saved.mark)
-        marks++;
-
-    });
-
-
-    document.getElementById(
-      "visitedCount"
-    ).innerText = visited;
-
-
-    document.getElementById(
-      "stampCount"
-    ).innerText = stamps;
-
-
-    document.getElementById(
-      "markCount"
-    ).innerText = marks;
-
-
-    const percentage =
-      (visited / objectIds.length) * 100;
-
-
-    document.getElementById(
-      "progressBar"
-    ).style.width =
-      percentage + "%";
-
-  }
-
-
-
-  objectIds.forEach(id => {
-
-    updateObject(id);
-
-  });
-
-
+  renderObjects();
   updateStats();
 
+}
 
 
-  if ("serviceWorker" in navigator) {
+createMap();
+renderObjects();
+updateStats();
 
-    navigator.serviceWorker.register(
-      "./service-worker.js"
-    );
 
-  }
+if ("serviceWorker" in navigator) {
+
+  navigator.serviceWorker.register(
+    "./service-worker.js"
+  );
+
+}
 
 </script>
 
