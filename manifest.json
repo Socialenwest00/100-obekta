@@ -1,0 +1,9 @@
+{
+  "name": "100-те национални обекта",
+  "short_name": "100 Обекта",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1b5e20",
+  "description": "Моят списък с 100-те национални туристически обекта"
+}
