@@ -1141,21 +1141,45 @@ attribution:
 
 objects.forEach(object => {
 
+  if (
+    object.lat === null ||
+    object.lng === null
+  ) {
+    return;
+  }
 
-const data =
-getData(object.id);
+  const data = getData(object.id);
 
+  const marker =
+    L.marker([
+      object.lat,
+      object.lng
+    ]).addTo(map);
 
-const marker =
+  marker.bindPopup(`
 
-L.marker([
+    <div class="map-popup-title">
+      ${object.name}
+    </div>
 
-object.lat,
-object.lng
+    📍 ${object.city}
 
-])
+    <br>
 
-.addTo(map);
+    ${
+      data.visited
+        ? "🟢 Посетен"
+        : "🔴 Не е посетен"
+    }
+
+  `);
+
+  markers.push({
+    object,
+    marker
+  });
+
+});
 
 
 marker.bindPopup(`
