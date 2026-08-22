@@ -1,791 +1,1348 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#166534">
+<meta charset="UTF-8">
 
-  <title>100 НТО 🇧🇬</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-  <!-- Leaflet -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+<link rel="manifest" href="manifest.json">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta name="theme-color"
+      content="#166534">
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      background: #f5f5f5;
-      color: #222;
-    }
+<title>100 НТО 🇧🇬</title>
 
-    #app {
-      min-height: 100vh;
-      padding-bottom: 70px;
-    }
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 
-    header {
-      background: #166534;
-      color: white;
-      padding: 16px;
-      text-align: center;
-    }
+<style>
 
-    header h1 {
-      margin: 0;
-      font-size: 22px;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    header p {
-      margin: 5px 0 0;
-      opacity: .9;
-      font-size: 13px;
-    }
+body {
+  margin: 0;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
 
-    .screen {
-      display: none;
-    }
+  background: #f5f5f5;
+  color: #222;
+}
 
-    .screen.active {
-      display: block;
-    }
+#app {
+  min-height: 100vh;
+  padding-bottom: 70px;
+}
 
-    #map {
-      width: 100%;
-      height: calc(100vh - 139px);
-      min-height: 500px;
-    }
+header {
+  background: #166534;
+  color: white;
+  padding: 16px;
+  text-align: center;
+}
 
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 65px;
-      background: white;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      border-top: 1px solid #ddd;
-      z-index: 9999;
-      padding-bottom: env(safe-area-inset-bottom);
-    }
+header h1 {
+  margin: 0;
+  font-size: 22px;
+}
 
-    .nav-button {
-      border: none;
-      background: white;
-      font-size: 12px;
-      color: #555;
-    }
+header p {
+  margin: 5px 0 0;
+  opacity: .9;
+  font-size: 13px;
+}
 
-    .nav-button.active {
-      color: #166534;
-      font-weight: bold;
-    }
+.screen {
+  display: none;
+}
 
-    .nav-icon {
-      display: block;
-      font-size: 22px;
-      margin-bottom: 2px;
-    }
+.screen.active {
+  display: block;
+}
 
-    .content {
-      max-width: 700px;
-      margin: auto;
-      padding: 12px;
-    }
+#map {
+  width: 100%;
+  height: calc(100vh - 139px);
+  min-height: 500px;
+}
 
-    .search {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 16px;
-      margin-bottom: 12px;
-    }
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
 
-    .object-card {
-      background: white;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: 0 2px 7px rgba(0,0,0,.08);
-    }
+  height: 65px;
 
-    .object-number {
-      color: #777;
-      font-size: 13px;
-      margin-bottom: 5px;
-    }
+  background: white;
 
-    .object-card h2 {
-      font-size: 18px;
-      margin: 0 0 6px;
-    }
+  display: grid;
+  grid-template-columns:
+    repeat(3, 1fr);
 
-    .location {
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
+  border-top: 1px solid #ddd;
 
-    .status {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 20px;
-      font-size: 13px;
-      margin-bottom: 12px;
-    }
+  z-index: 9999;
 
-    .status.no {
-      background: #ffebee;
-      color: #c62828;
-    }
+  padding-bottom:
+    env(safe-area-inset-bottom);
+}
 
-    .status.yes {
-      background: #e8f5e9;
-      color: #2e7d32;
-    }
+.nav-button {
+  border: none;
+  background: white;
 
-    .checks {
-      display: grid;
-      gap: 9px;
-    }
+  font-size: 12px;
 
-    .check {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      font-size: 15px;
-    }
+  color: #555;
+}
 
-    .check input {
-      width: 20px;
-      height: 20px;
-      accent-color: #166534;
-    }
+.nav-button.active {
+  color: #166534;
+  font-weight: bold;
+}
 
-    .date {
-      width: 100%;
-      margin-top: 12px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 15px;
-    }
+.nav-icon {
+  display: block;
+  font-size: 22px;
+  margin-bottom: 2px;
+}
 
-    .note {
-      width: 100%;
-      min-height: 70px;
-      margin-top: 10px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-family: inherit;
-      resize: vertical;
-    }
+.content {
+  max-width: 700px;
+  margin: auto;
+  padding: 12px;
+}
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
+.search {
+  width: 100%;
 
-    .stat {
-      background: white;
-      border-radius: 14px;
-      padding: 18px 10px;
-      text-align: center;
-      box-shadow: 0 2px 7px rgba(0,0,0,.07);
-    }
+  padding: 13px;
 
-    .stat-number {
-      font-size: 28px;
-      font-weight: bold;
-      color: #166534;
-    }
+  border: 1px solid #ccc;
 
-    .stat-label {
-      color: #666;
-      font-size: 13px;
-      margin-top: 4px;
-    }
+  border-radius: 10px;
 
-    .progress-container {
-      background: #ddd;
-      border-radius: 20px;
-      height: 13px;
-      overflow: hidden;
-      margin-top: 15px;
-    }
+  font-size: 16px;
 
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: #166534;
-      transition: width .3s;
-    }
+  margin-bottom: 12px;
+}
 
-    .achievement {
-      background: white;
-      border-radius: 14px;
-      padding: 16px;
-      margin-top: 15px;
-      box-shadow: 0 2px 7px rgba(0,0,0,.07);
-    }
+.object-card {
 
-    .achievement h2 {
-      margin-top: 0;
-      font-size: 18px;
-    }
+  background: white;
 
-    .achievement-row {
-      padding: 9px 0;
-      border-bottom: 1px solid #eee;
-    }
+  border-radius: 14px;
 
-    .achievement-row:last-child {
-      border-bottom: none;
-    }
+  padding: 16px;
 
-    .leaflet-popup-content {
-      font-size: 14px;
-    }
+  margin-bottom: 12px;
 
-    .map-popup-title {
-      font-weight: bold;
-      font-size: 15px;
-      margin-bottom: 5px;
-    }
-  </style>
+  box-shadow:
+    0 2px 7px rgba(0,0,0,.08);
+}
+
+.object-number {
+
+  color: #777;
+
+  font-size: 13px;
+
+  margin-bottom: 5px;
+}
+
+.object-card h2 {
+
+  font-size: 18px;
+
+  margin: 0 0 6px;
+}
+
+.location {
+
+  color: #666;
+
+  font-size: 14px;
+
+  margin-bottom: 12px;
+}
+
+.status {
+
+  display: inline-block;
+
+  padding: 6px 10px;
+
+  border-radius: 20px;
+
+  font-size: 13px;
+
+  margin-bottom: 12px;
+}
+
+.status.no {
+
+  background: #ffebee;
+
+  color: #c62828;
+}
+
+.status.yes {
+
+  background: #e8f5e9;
+
+  color: #2e7d32;
+}
+
+.checks {
+
+  display: grid;
+
+  gap: 9px;
+}
+
+.check {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  font-size: 15px;
+}
+
+.check input {
+
+  width: 20px;
+
+  height: 20px;
+
+  accent-color: #166534;
+}
+
+.date {
+
+  width: 100%;
+
+  margin-top: 12px;
+
+  padding: 10px;
+
+  border: 1px solid #ccc;
+
+  border-radius: 8px;
+
+  font-size: 15px;
+}
+
+.note {
+
+  width: 100%;
+
+  min-height: 70px;
+
+  margin-top: 10px;
+
+  padding: 10px;
+
+  border: 1px solid #ccc;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+
+  resize: vertical;
+}
+
+.stats-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 10px;
+}
+
+.stat {
+
+  background: white;
+
+  border-radius: 14px;
+
+  padding: 18px 10px;
+
+  text-align: center;
+
+  box-shadow:
+    0 2px 7px rgba(0,0,0,.07);
+}
+
+.stat-number {
+
+  font-size: 28px;
+
+  font-weight: bold;
+
+  color: #166534;
+}
+
+.stat-label {
+
+  color: #666;
+
+  font-size: 13px;
+
+  margin-top: 4px;
+}
+
+.progress-container {
+
+  background: #ddd;
+
+  border-radius: 20px;
+
+  height: 13px;
+
+  overflow: hidden;
+
+  margin-top: 15px;
+}
+
+.progress-bar {
+
+  height: 100%;
+
+  width: 0%;
+
+  background: #166534;
+
+  transition: width .3s;
+}
+
+.achievement {
+
+  background: white;
+
+  border-radius: 14px;
+
+  padding: 16px;
+
+  margin-top: 15px;
+
+  box-shadow:
+    0 2px 7px rgba(0,0,0,.07);
+}
+
+.achievement h2 {
+
+  margin-top: 0;
+
+  font-size: 18px;
+}
+
+.leaflet-popup-content {
+
+  font-size: 14px;
+}
+
+.map-popup-title {
+
+  font-weight: bold;
+
+  font-size: 15px;
+
+  margin-bottom: 5px;
+}
+
+</style>
+
 </head>
 
 <body>
 
+
 <div id="app">
 
-  <header>
-    <h1>🇧🇬 100 НТО</h1>
-    <p>Моят личен туристически дневник</p>
-  </header>
 
-  <!-- MAP -->
-  <section id="mapScreen" class="screen active">
-    <div id="map"></div>
-  </section>
+<header>
 
-  <!-- OBJECTS -->
-  <section id="objectsScreen" class="screen">
-    <div class="content">
+<h1>🇧🇬 100 НТО</h1>
 
-      <input
-        id="search"
-        class="search"
-        type="search"
-        placeholder="🔎 Търси обект..."
-        oninput="renderObjects()"
-      >
+<p>
+Моят личен туристически дневник
+</p>
 
-      <div id="objectList"></div>
+</header>
 
-    </div>
-  </section>
 
-  <!-- PROGRESS -->
-  <section id="progressScreen" class="screen">
-    <div class="content">
+<!-- КАРТА -->
 
-      <div class="stats-grid">
+<section
+  id="mapScreen"
+  class="screen active"
+>
 
-        <div class="stat">
-          <div id="visitedCount" class="stat-number">0</div>
-          <div class="stat-label">🟢 Посетени</div>
-        </div>
+<div id="map"></div>
 
-        <div class="stat">
-          <div id="stampCount" class="stat-number">0</div>
-          <div class="stat-label">🖋️ Печати</div>
-        </div>
+</section>
 
-        <div class="stat">
-          <div id="markCount" class="stat-number">0</div>
-          <div class="stat-label">🎫 Марки</div>
-        </div>
 
-        <div class="stat">
-          <div id="completeCount" class="stat-number">0</div>
-          <div class="stat-label">⭐ Пълен комплект</div>
-        </div>
+<!-- ОБЕКТИ -->
 
-      </div>
+<section
+  id="objectsScreen"
+  class="screen"
+>
 
-      <div class="achievement">
+<div class="content">
 
-        <h2>🏆 Прогрес</h2>
 
-        <div id="achievementText">
-          Започни своето приключение!
-        </div>
+<input
+  id="search"
+  class="search"
+  type="search"
+  placeholder="🔎 Търси обект..."
+  oninput="renderObjects()"
+>
 
-        <div class="progress-container">
-          <div id="progressBar" class="progress-bar"></div>
-        </div>
 
-      </div>
+<div id="objectList"></div>
 
-    </div>
-  </section>
+
+</div>
+
+</section>
+
+
+<!-- ПРОГРЕС -->
+
+<section
+  id="progressScreen"
+  class="screen"
+>
+
+<div class="content">
+
+
+<div class="stats-grid">
+
+
+<div class="stat">
+
+<div
+  id="visitedCount"
+  class="stat-number"
+>
+0
+</div>
+
+<div class="stat-label">
+🟢 Посетени
+</div>
 
 </div>
 
 
-<!-- BOTTOM NAV -->
+<div class="stat">
+
+<div
+  id="stampCount"
+  class="stat-number"
+>
+0
+</div>
+
+<div class="stat-label">
+🖋️ Печати
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div
+  id="markCount"
+  class="stat-number"
+>
+0
+</div>
+
+<div class="stat-label">
+🎫 Марки
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div
+  id="completeCount"
+  class="stat-number"
+>
+0
+</div>
+
+<div class="stat-label">
+⭐ Пълен комплект
+</div>
+
+</div>
+
+
+</div>
+
+
+<div class="achievement">
+
+<h2>
+🏆 Прогрес
+</h2>
+
+<div id="achievementText">
+Започни своето приключение!
+</div>
+
+<div class="progress-container">
+
+<div
+  id="progressBar"
+  class="progress-bar"
+></div>
+
+</div>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+</div>
+
+
+<!-- ДОЛНО МЕНЮ -->
 
 <nav class="bottom-nav">
 
-  <button
-    id="navMap"
-    class="nav-button active"
-    onclick="showScreen('map')">
 
-    <span class="nav-icon">🗺️</span>
-    Карта
+<button
+  id="navMap"
+  class="nav-button active"
+  onclick="showScreen('map')"
+>
 
-  </button>
+<span class="nav-icon">
+🗺️
+</span>
 
-  <button
-    id="navObjects"
-    class="nav-button"
-    onclick="showScreen('objects')">
+Карта
 
-    <span class="nav-icon">📋</span>
-    Обекти
+</button>
 
-  </button>
 
-  <button
-    id="navProgress"
-    class="nav-button"
-    onclick="showScreen('progress')">
+<button
+  id="navObjects"
+  class="nav-button"
+  onclick="showScreen('objects')"
+>
 
-    <span class="nav-icon">🏆</span>
-    Прогрес
+<span class="nav-icon">
+📋
+</span>
 
-  </button>
+Обекти
+
+</button>
+
+
+<button
+  id="navProgress"
+  class="nav-button"
+  onclick="showScreen('progress')"
+>
+
+<span class="nav-icon">
+🏆
+</span>
+
+Прогрес
+
+</button>
+
 
 </nav>
 
 
-<!-- LEAFLET -->
-
 <script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 </script>
 
 
 <script>
 
-const objects = [
 
-  {
-    id: 1,
-    number: "1",
-    name: "Рилски манастир",
-    city: "Рилски манастир",
-    lat: 42.1337,
-    lng: 23.3402
-  },
-
-  {
-    id: 2,
-    number: "72",
-    name: "Монумент „Св. Богородица“",
-    city: "Хасково",
-    lat: 41.9277,
-    lng: 25.5557
-  }
-
-];
-
+let objects = [];
 
 let map;
+
 let markers = [];
+
+
+
+/* =========================
+   ЗАРЕЖДАНЕ НА ОБЕКТИТЕ
+========================= */
+
+
+async function loadObjects() {
+
+try {
+
+const response =
+await fetch("./objects.json");
+
+
+if (!response.ok) {
+
+throw new Error(
+"objects.json не е намерен"
+);
+
+}
+
+
+objects =
+await response.json();
+
+
+createMap();
+
+renderObjects();
+
+updateStats();
+
+
+}
+
+catch(error) {
+
+console.error(error);
+
+document.getElementById(
+"objectList"
+).innerHTML = `
+
+<div class="object-card">
+
+<h2>
+⚠️ Грешка
+</h2>
+
+<p>
+Не успях да заредя списъка с обектите.
+</p>
+
+</div>
+
+`;
+
+}
+
+}
+
+
+
+/* =========================
+   ДАННИ
+========================= */
 
 
 function getData(id) {
 
-  return JSON.parse(
-    localStorage.getItem("object-" + id) || "{}"
-  );
+return JSON.parse(
+
+localStorage.getItem(
+"object-" + id
+)
+
+|| "{}"
+
+);
 
 }
 
 
-function saveData(id, data) {
+function saveData(id,data) {
 
-  localStorage.setItem(
-    "object-" + id,
-    JSON.stringify(data)
-  );
+localStorage.setItem(
+
+"object-" + id,
+
+JSON.stringify(data)
+
+);
+
+}
+
+
+
+/* =========================
+   ПРОМЯНА
+========================= */
+
+
+function updateObject(
+id,
+field,
+value
+) {
+
+const data =
+getData(id);
+
+
+data[field] =
+value;
+
+
+saveData(
+id,
+data
+);
+
+
+updateEverything();
 
 }
 
 
-function updateObject(id, field, value) {
 
-  const data = getData(id);
-
-  data[field] = value;
-
-  saveData(id, data);
-
-  updateEverything();
-
-}
+/* =========================
+   СПИСЪК
+========================= */
 
 
 function renderObjects() {
 
-  const search =
-    document.getElementById("search")
-      .value
-      .toLowerCase();
+const search =
 
-  const list =
-    document.getElementById("objectList");
+document
+.getElementById("search")
+.value
+.toLowerCase();
 
-  list.innerHTML = "";
 
-  objects
-    .filter(object =>
-      (object.name + " " + object.city + " " + object.number)
-        .toLowerCase()
-        .includes(search)
-    )
-    .forEach(object => {
+const list =
 
-      const data = getData(object.id);
+document
+.getElementById("objectList");
 
-      const card =
-        document.createElement("div");
 
-      card.className = "object-card";
+list.innerHTML = "";
 
-      card.innerHTML = `
 
-        <div class="object-number">
-          Обект №${object.number}
-        </div>
+objects
 
-        <h2>${object.name}</h2>
+.filter(object =>
 
-        <div class="location">
-          📍 ${object.city}
-        </div>
+(
 
-        <div class="status ${data.visited ? "yes" : "no"}">
-          ${data.visited ? "🟢 Посетен" : "🔴 Не е посетен"}
-        </div>
+object.name
++ " "
++ object.city
++ " "
++ object.number
 
-        <div class="checks">
+)
 
-          <label class="check">
-            <input
-              type="checkbox"
-              ${data.visited ? "checked" : ""}
-              onchange="updateObject(${object.id}, 'visited', this.checked)"
-            >
-            Посетен
-          </label>
+.toLowerCase()
+.includes(search)
 
-          <label class="check">
-            <input
-              type="checkbox"
-              ${data.stamp ? "checked" : ""}
-              onchange="updateObject(${object.id}, 'stamp', this.checked)"
-            >
-            🖋️ Имам печат
-          </label>
+)
 
-          <label class="check">
-            <input
-              type="checkbox"
-              ${data.mark ? "checked" : ""}
-              onchange="updateObject(${object.id}, 'mark', this.checked)"
-            >
-            🎫 Имам марка
-          </label>
 
-        </div>
+.forEach(object => {
 
-        <input
-          class="date"
-          type="date"
-          value="${data.date || ""}"
-          onchange="updateObject(${object.id}, 'date', this.value)"
-        >
 
-        <textarea
-          class="note"
-          placeholder="📝 Моя бележка..."
-          onchange="updateObject(${object.id}, 'note', this.value)"
-        >${data.note || ""}</textarea>
+const data =
+getData(object.id);
 
-      `;
 
-      list.appendChild(card);
+const card =
+document.createElement(
+"div"
+);
 
-    });
+
+card.className =
+"object-card";
+
+
+card.innerHTML = `
+
+<div class="object-number">
+
+Обект №${object.number}
+
+</div>
+
+
+<h2>
+${object.name}
+</h2>
+
+
+<div class="location">
+
+📍 ${object.city}
+
+</div>
+
+
+<div class="status
+${data.visited ? "yes" : "no"}">
+
+${data.visited
+? "🟢 Посетен"
+: "🔴 Не е посетен"}
+
+</div>
+
+
+<div class="checks">
+
+
+<label class="check">
+
+<input
+
+type="checkbox"
+
+${data.visited
+? "checked"
+: ""}
+
+onchange="
+updateObject(
+${object.id},
+'visited',
+this.checked
+)
+"
+
+>
+
+Посетен
+
+</label>
+
+
+<label class="check">
+
+<input
+
+type="checkbox"
+
+${data.stamp
+? "checked"
+: ""}
+
+onchange="
+updateObject(
+${object.id},
+'stamp',
+this.checked
+)
+"
+
+>
+
+🖋️ Имам печат
+
+</label>
+
+
+<label class="check">
+
+<input
+
+type="checkbox"
+
+${data.mark
+? "checked"
+: ""}
+
+onchange="
+updateObject(
+${object.id},
+'mark',
+this.checked
+)
+"
+
+>
+
+🎫 Имам марка
+
+</label>
+
+
+</div>
+
+
+<input
+
+class="date"
+
+type="date"
+
+value="${data.date || ""}"
+
+onchange="
+updateObject(
+${object.id},
+'date',
+this.value
+)
+"
+
+>
+
+
+<textarea
+
+class="note"
+
+placeholder="📝 Моя бележка..."
+
+onchange="
+updateObject(
+${object.id},
+'note',
+this.value
+)
+"
+
+>${data.note || ""}</textarea>
+
+
+`;
+
+
+list.appendChild(card);
+
+
+});
 
 }
+
+
+
+/* =========================
+   СТАТИСТИКА
+========================= */
 
 
 function updateStats() {
 
-  let visited = 0;
-  let stamps = 0;
-  let marks = 0;
-  let complete = 0;
+let visited = 0;
+
+let stamps = 0;
+
+let marks = 0;
+
+let complete = 0;
 
 
-  objects.forEach(object => {
-
-    const data = getData(object.id);
-
-    if (data.visited)
-      visited++;
-
-    if (data.stamp)
-      stamps++;
-
-    if (data.mark)
-      marks++;
-
-    if (
-      data.visited &&
-      data.stamp &&
-      data.mark
-    ) {
-      complete++;
-    }
-
-  });
+objects.forEach(object => {
 
 
-  document.getElementById(
-    "visitedCount"
-  ).innerText = visited;
+const data =
+getData(object.id);
 
 
-  document.getElementById(
-    "stampCount"
-  ).innerText = stamps;
+if (data.visited)
+visited++;
 
 
-  document.getElementById(
-    "markCount"
-  ).innerText = marks;
+if (data.stamp)
+stamps++;
 
 
-  document.getElementById(
-    "completeCount"
-  ).innerText = complete;
+if (data.mark)
+marks++;
 
 
-  const percentage =
-    (visited / objects.length) * 100;
+if (
+
+data.visited
+&&
+data.stamp
+&&
+data.mark
+
+)
+
+complete++;
 
 
-  document.getElementById(
-    "progressBar"
-  ).style.width =
-    percentage + "%";
+});
 
 
-  if (visited >= 100) {
+document
+.getElementById(
+"visitedCount"
+)
+.innerText =
+visited;
 
-    document.getElementById(
-      "achievementText"
-    ).innerText =
-      "🥇 100 посетени обекта!";
 
-  } else if (visited >= 50) {
+document
+.getElementById(
+"stampCount"
+)
+.innerText =
+stamps;
 
-    document.getElementById(
-      "achievementText"
-    ).innerText =
-      "🥈 50 посетени обекта!";
 
-  } else if (visited >= 25) {
+document
+.getElementById(
+"markCount"
+)
+.innerText =
+marks;
 
-    document.getElementById(
-      "achievementText"
-    ).innerText =
-      "🥉 25 посетени обекта!";
 
-  } else {
+document
+.getElementById(
+"completeCount"
+)
+.innerText =
+complete;
 
-    document.getElementById(
-      "achievementText"
-    ).innerText =
-      `Посетени: ${visited} / ${objects.length}`;
 
-  }
+const percentage =
+
+objects.length
+
+?
+
+(visited / objects.length)
+* 100
+
+: 0;
+
+
+document
+.getElementById(
+"progressBar"
+)
+.style.width =
+
+percentage + "%";
+
+
+if (visited >= 100) {
+
+document
+.getElementById(
+"achievementText"
+)
+.innerText =
+
+"🥇 100 посетени обекта!";
 
 }
+
+else if (visited >= 50) {
+
+document
+.getElementById(
+"achievementText"
+)
+.innerText =
+
+"🥈 50 посетени обекта!";
+
+}
+
+else if (visited >= 25) {
+
+document
+.getElementById(
+"achievementText"
+)
+.innerText =
+
+"🥉 25 посетени обекта!";
+
+}
+
+else {
+
+document
+.getElementById(
+"achievementText"
+)
+.innerText =
+
+`Посетени: ${visited} / ${objects.length}`;
+
+}
+
+}
+
+
+
+/* =========================
+   КАРТА
+========================= */
 
 
 function createMap() {
 
-  map = L.map("map").setView(
-    [42.7339, 25.4858],
-    7
-  );
+
+map =
+L.map("map")
+.setView(
+[42.7339,25.4858],
+7
+);
 
 
-  L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {
-      attribution:
-        '&copy; OpenStreetMap contributors'
-    }
-  ).addTo(map);
+L.tileLayer(
 
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 
-  objects.forEach(object => {
+{
 
-    const data =
-      getData(object.id);
-
-
-    const marker =
-      L.marker([
-        object.lat,
-        object.lng
-      ]).addTo(map);
-
-
-    marker.bindPopup(`
-
-      <div class="map-popup-title">
-        ${object.name}
-      </div>
-
-      📍 ${object.city}<br>
-
-      ${data.visited
-        ? "🟢 Посетен"
-        : "🔴 Не е посетен"}
-
-    `);
-
-
-    markers.push({
-      object,
-      marker
-    });
-
-  });
+attribution:
+'&copy; OpenStreetMap contributors'
 
 }
+
+).addTo(map);
+
+
+objects.forEach(object => {
+
+
+const data =
+getData(object.id);
+
+
+const marker =
+
+L.marker([
+
+object.lat,
+object.lng
+
+])
+
+.addTo(map);
+
+
+marker.bindPopup(`
+
+<div class="map-popup-title">
+
+${object.name}
+
+</div>
+
+📍 ${object.city}
+
+<br>
+
+${data.visited
+? "🟢 Посетен"
+: "🔴 Не е посетен"}
+
+`);
+
+
+markers.push({
+
+object,
+marker
+
+});
+
+
+});
+
+}
+
+
+
+/* =========================
+   ЕКРАНИ
+========================= */
 
 
 function showScreen(screen) {
 
-  document
-    .querySelectorAll(".screen")
-    .forEach(element =>
-      element.classList.remove("active")
-    );
+
+document
+.querySelectorAll(".screen")
+.forEach(element =>
+
+element.classList.remove(
+"active"
+)
+
+);
 
 
-  document
-    .querySelectorAll(".nav-button")
-    .forEach(element =>
-      element.classList.remove("active")
-    );
+document
+.querySelectorAll(".nav-button")
+.forEach(element =>
+
+element.classList.remove(
+"active"
+)
+
+);
 
 
-  if (screen === "map") {
-
-    document
-      .getElementById("mapScreen")
-      .classList.add("active");
-
-    document
-      .getElementById("navMap")
-      .classList.add("active");
+if (screen === "map") {
 
 
-    setTimeout(() => {
-
-      if (map)
-        map.invalidateSize();
-
-    }, 100);
-
-  }
-
-
-  if (screen === "objects") {
-
-    document
-      .getElementById("objectsScreen")
-      .classList.add("active");
-
-    document
-      .getElementById("navObjects")
-      .classList.add("active");
-
-    renderObjects();
-
-  }
+document
+.getElementById(
+"mapScreen"
+)
+.classList.add(
+"active"
+);
 
 
-  if (screen === "progress") {
+document
+.getElementById(
+"navMap"
+)
+.classList.add(
+"active"
+);
 
-    document
-      .getElementById("progressScreen")
-      .classList.add("active");
 
-    document
-      .getElementById("navProgress")
-      .classList.add("active");
+setTimeout(() => {
 
-    updateStats();
+if (map)
 
-  }
+map.invalidateSize();
+
+},100);
+
 
 }
+
+
+if (screen === "objects") {
+
+
+document
+.getElementById(
+"objectsScreen"
+)
+.classList.add(
+"active"
+);
+
+
+document
+.getElementById(
+"navObjects"
+)
+.classList.add(
+"active"
+);
+
+
+renderObjects();
+
+
+}
+
+
+if (screen === "progress") {
+
+
+document
+.getElementById(
+"progressScreen"
+)
+.classList.add(
+"active"
+);
+
+
+document
+.getElementById(
+"navProgress"
+)
+.classList.add(
+"active"
+);
+
+
+updateStats();
+
+
+}
+
+}
+
+
+
+/* =========================
+   ОБНОВЯВАНЕ
+========================= */
 
 
 function updateEverything() {
 
-  renderObjects();
-  updateStats();
+renderObjects();
+
+updateStats();
 
 }
 
 
-createMap();
-renderObjects();
-updateStats();
+
+/* =========================
+   СТАРТ
+========================= */
+
+
+loadObjects();
+
 
 
 if ("serviceWorker" in navigator) {
 
-  navigator.serviceWorker.register(
-    "./service-worker.js"
-  );
+navigator.serviceWorker.register(
+"./service-worker.js"
+);
 
 }
+
 
 </script>
 
