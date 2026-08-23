@@ -1,1397 +1,343 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>100 НТО</title>
 
 <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#166534">
 
-<meta name="theme-color"
-      content="#166534">
-
-<title>100 НТО 🇧🇬</title>
-
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
 <style>
-
-* {
-  box-sizing: border-box;
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;
+background:#f5f5f5;
 }
 
-body {
-  margin: 0;
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
-  background: #f5f5f5;
-  color: #222;
+header{
+background:#166534;
+color:white;
+padding:15px;
+text-align:center;
 }
 
-#app {
-  min-height: 100vh;
-  padding-bottom: 70px;
+#map{
+height:55vh;
 }
 
-header {
-  background: #166534;
-  color: white;
-  padding: 16px;
-  text-align: center;
+.tabs{
+display:flex;
+background:white;
+border-bottom:1px solid #ddd;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 22px;
+.tabs button{
+flex:1;
+padding:12px;
+border:none;
+background:white;
+font-size:15px;
 }
 
-header p {
-  margin: 5px 0 0;
-  opacity: .9;
-  font-size: 13px;
+.tabs button.active{
+color:#166534;
+font-weight:bold;
 }
 
-.screen {
-  display: none;
+.page{
+display:none;
+padding:12px;
 }
 
-.screen.active {
-  display: block;
+.page.active{
+display:block;
 }
 
-#map {
-  width: 100%;
-  height: calc(100vh - 139px);
-  min-height: 500px;
+.card{
+background:white;
+padding:14px;
+border-radius:14px;
+margin-bottom:12px;
+box-shadow:0 2px 6px rgba(0,0,0,.08);
 }
 
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  height: 65px;
-
-  background: white;
-
-  display: grid;
-  grid-template-columns:
-    repeat(3, 1fr);
-
-  border-top: 1px solid #ddd;
-
-  z-index: 9999;
-
-  padding-bottom:
-    env(safe-area-inset-bottom);
+input[type=search]{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid #ccc;
+margin-bottom:12px;
 }
 
-.nav-button {
-  border: none;
-  background: white;
-
-  font-size: 12px;
-
-  color: #555;
+label{
+display:flex;
+align-items:center;
+gap:8px;
+margin:8px 0;
 }
 
-.nav-button.active {
-  color: #166534;
-  font-weight: bold;
+textarea{
+width:100%;
+min-height:60px;
+margin-top:8px;
 }
 
-.nav-icon {
-  display: block;
-  font-size: 22px;
-  margin-bottom: 2px;
+.stats{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
 }
 
-.content {
-  max-width: 700px;
-  margin: auto;
-  padding: 12px;
+.stat{
+background:white;
+padding:20px;
+border-radius:14px;
+text-align:center;
 }
 
-.search {
-  width: 100%;
-
-  padding: 13px;
-
-  border: 1px solid #ccc;
-
-  border-radius: 10px;
-
-  font-size: 16px;
-
-  margin-bottom: 12px;
+.big{
+font-size:28px;
+font-weight:bold;
+color:#166534;
 }
-
-.object-card {
-
-  background: white;
-
-  border-radius: 14px;
-
-  padding: 16px;
-
-  margin-bottom: 12px;
-
-  box-shadow:
-    0 2px 7px rgba(0,0,0,.08);
-}
-
-.object-number {
-
-  color: #777;
-
-  font-size: 13px;
-
-  margin-bottom: 5px;
-}
-
-.object-card h2 {
-
-  font-size: 18px;
-
-  margin: 0 0 6px;
-}
-
-.location {
-
-  color: #666;
-
-  font-size: 14px;
-
-  margin-bottom: 12px;
-}
-
-.status {
-
-  display: inline-block;
-
-  padding: 6px 10px;
-
-  border-radius: 20px;
-
-  font-size: 13px;
-
-  margin-bottom: 12px;
-}
-
-.status.no {
-
-  background: #ffebee;
-
-  color: #c62828;
-}
-
-.status.yes {
-
-  background: #e8f5e9;
-
-  color: #2e7d32;
-}
-
-.checks {
-
-  display: grid;
-
-  gap: 9px;
-}
-
-.check {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 9px;
-
-  font-size: 15px;
-}
-
-.check input {
-
-  width: 20px;
-
-  height: 20px;
-
-  accent-color: #166534;
-}
-
-.date {
-
-  width: 100%;
-
-  margin-top: 12px;
-
-  padding: 10px;
-
-  border: 1px solid #ccc;
-
-  border-radius: 8px;
-
-  font-size: 15px;
-}
-
-.note {
-
-  width: 100%;
-
-  min-height: 70px;
-
-  margin-top: 10px;
-
-  padding: 10px;
-
-  border: 1px solid #ccc;
-
-  border-radius: 8px;
-
-  font-family: inherit;
-
-  resize: vertical;
-}
-
-.stats-grid {
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(2, 1fr);
-
-  gap: 10px;
-}
-
-.stat {
-
-  background: white;
-
-  border-radius: 14px;
-
-  padding: 18px 10px;
-
-  text-align: center;
-
-  box-shadow:
-    0 2px 7px rgba(0,0,0,.07);
-}
-
-.stat-number {
-
-  font-size: 28px;
-
-  font-weight: bold;
-
-  color: #166534;
-}
-
-.stat-label {
-
-  color: #666;
-
-  font-size: 13px;
-
-  margin-top: 4px;
-}
-
-.progress-container {
-
-  background: #ddd;
-
-  border-radius: 20px;
-
-  height: 13px;
-
-  overflow: hidden;
-
-  margin-top: 15px;
-}
-
-.progress-bar {
-
-  height: 100%;
-
-  width: 0%;
-
-  background: #166534;
-
-  transition: width .3s;
-}
-
-.achievement {
-
-  background: white;
-
-  border-radius: 14px;
-
-  padding: 16px;
-
-  margin-top: 15px;
-
-  box-shadow:
-    0 2px 7px rgba(0,0,0,.07);
-}
-
-.achievement h2 {
-
-  margin-top: 0;
-
-  font-size: 18px;
-}
-
-.leaflet-popup-content {
-
-  font-size: 14px;
-}
-
-.map-popup-title {
-
-  font-weight: bold;
-
-  font-size: 15px;
-
-  margin-bottom: 5px;
-}
-
 </style>
-
 </head>
 
 <body>
 
-
-<div id="app">
-
-
 <header>
-
-<h1>🇧🇬 100 НТО</h1>
-
-<p>
-Моят личен туристически дневник
-</p>
-
+<h2>🇧🇬 100 НТО</h2>
+<div>Моят личен туристически дневник</div>
 </header>
 
+<div class="tabs">
+<button id="b1" class="active" onclick="openTab('map')">🗺️ Карта</button>
+<button id="b2" onclick="openTab('list')">📋 Обекти</button>
+<button id="b3" onclick="openTab('progress')">🏆 Прогрес</button>
+</div>
 
-<!-- КАРТА -->
-
-<section
-  id="mapScreen"
-  class="screen active"
->
-
+<div id="mapPage" class="page active">
 <div id="map"></div>
-
-</section>
-
-
-<!-- ОБЕКТИ -->
-
-<section
-  id="objectsScreen"
-  class="screen"
->
-
-<div class="content">
-
-
-<input
-  id="search"
-  class="search"
-  type="search"
-  placeholder="🔎 Търси обект..."
-  oninput="renderObjects()"
->
-
-
-<div id="objectList"></div>
-
-
 </div>
 
-</section>
+<div id="listPage" class="page">
+<input id="search" type="search" placeholder="Търси..." oninput="renderList()">
+<div id="list"></div>
+</div>
 
-
-<!-- ПРОГРЕС -->
-
-<section
-  id="progressScreen"
-  class="screen"
->
-
-<div class="content">
-
-
-<div class="stats-grid">
-
+<div id="progressPage" class="page">
+<div class="stats">
 
 <div class="stat">
-
-<div
-  id="visitedCount"
-  class="stat-number"
->
-0
+<div id="v" class="big">0</div>
+Посетени
 </div>
-
-<div class="stat-label">
-🟢 Посетени
-</div>
-
-</div>
-
 
 <div class="stat">
-
-<div
-  id="stampCount"
-  class="stat-number"
->
-0
+<div id="s" class="big">0</div>
+Печати
 </div>
-
-<div class="stat-label">
-🖋️ Печати
-</div>
-
-</div>
-
 
 <div class="stat">
-
-<div
-  id="markCount"
-  class="stat-number"
->
-0
+<div id="m" class="big">0</div>
+Марки
 </div>
-
-<div class="stat-label">
-🎫 Марки
-</div>
-
-</div>
-
 
 <div class="stat">
-
-<div
-  id="completeCount"
-  class="stat-number"
->
-0
-</div>
-
-<div class="stat-label">
-⭐ Пълен комплект
+<div id="c" class="big">0</div>
+Комплект
 </div>
 
 </div>
-
-
 </div>
 
-
-<div class="achievement">
-
-<h2>
-🏆 Прогрес
-</h2>
-
-<div id="achievementText">
-Започни своето приключение!
-</div>
-
-<div class="progress-container">
-
-<div
-  id="progressBar"
-  class="progress-bar"
-></div>
-
-</div>
-
-</div>
-
-
-</div>
-
-</section>
-
-
-</div>
-
-
-<!-- ДОЛНО МЕНЮ -->
-
-<nav class="bottom-nav">
-
-
-<button
-  id="navMap"
-  class="nav-button active"
-  onclick="showScreen('map')"
->
-
-<span class="nav-icon">
-🗺️
-</span>
-
-Карта
-
-</button>
-
-
-<button
-  id="navObjects"
-  class="nav-button"
-  onclick="showScreen('objects')"
->
-
-<span class="nav-icon">
-📋
-</span>
-
-Обекти
-
-</button>
-
-
-<button
-  id="navProgress"
-  class="nav-button"
-  onclick="showScreen('progress')"
->
-
-<span class="nav-icon">
-🏆
-</span>
-
-Прогрес
-
-</button>
-
-
-</nav>
-
-
-<script
-src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 
-
-let objects = [];
-
+let objects=[];
 let map;
+let layer;
 
-let markers = [];
+async function load(){
 
+const r=await fetch("objects.json");
+objects=await r.json();
 
+map=L.map("map").setView([42.7339,25.4858],7);
 
-/* =========================
-   ЗАРЕЖДАНЕ НА ОБЕКТИТЕ
-========================= */
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+attribution:"© OpenStreetMap"
+}).addTo(map);
 
+layer=L.layerGroup().addTo(map);
 
-async function loadObjects() {
-
-try {
-
-const response =
-await fetch("./objects.json");
-
-
-if (!response.ok) {
-
-throw new Error(
-"objects.json не е намерен"
-);
-
-}
-
-
-objects =
-await response.json();
-
-
-createMap();
-
-renderObjects();
-
+drawMarkers();
+renderList();
 updateStats();
 
+}
+
+function data(id){
+return JSON.parse(localStorage.getItem("obj-"+id)||"{}");
+}
+
+function save(id,key,val){
+const d=data(id);
+d[key]=val;
+localStorage.setItem("obj-"+id,JSON.stringify(d));
+drawMarkers();
+renderList();
+updateStats();
+}
+
+function drawMarkers(){
+
+layer.clearLayers();
+
+objects.forEach(o=>{
+
+if(o.lat==null||o.lng==null)return;
+
+const d=data(o.id);
+
+const color=d.visited?"#16a34a":"#dc2626";
+
+const icon=L.divIcon({
+className:"",
+html:`<div style="width:18px;height:18px;border-radius:50%;background:${color};border:3px solid white;"></div>`,
+iconSize:[18,18],
+iconAnchor:[9,9]
+});
+
+L.marker([o.lat,o.lng],{icon})
+.addTo(layer)
+.bindPopup(`<b>${o.name}</b><br>${o.city}`);
+
+});
 
 }
 
-catch(error) {
+function renderList(){
 
-console.error(error);
+const q=document.getElementById("search").value.toLowerCase();
+const box=document.getElementById("list");
 
-document.getElementById(
-"objectList"
-).innerHTML = `
-
-<div class="object-card">
-
-<h2>
-⚠️ Грешка
-</h2>
-
-<p>
-Не успях да заредя списъка с обектите.
-</p>
-
-</div>
-
-`;
-
-}
-
-}
-
-
-
-/* =========================
-   ДАННИ
-========================= */
-
-
-function getData(id) {
-
-return JSON.parse(
-
-localStorage.getItem(
-"object-" + id
-)
-
-|| "{}"
-
-);
-
-}
-
-
-function saveData(id,data) {
-
-localStorage.setItem(
-
-"object-" + id,
-
-JSON.stringify(data)
-
-);
-
-}
-
-
-
-/* =========================
-   ПРОМЯНА
-========================= */
-
-
-function updateObject(
-id,
-field,
-value
-) {
-
-const data =
-getData(id);
-
-
-data[field] =
-value;
-
-
-saveData(
-id,
-data
-);
-
-
-updateEverything();
-
-}
-
-
-
-/* =========================
-   СПИСЪК
-========================= */
-
-
-function renderObjects() {
-
-const search =
-
-document
-.getElementById("search")
-.value
-.toLowerCase();
-
-
-const list =
-
-document
-.getElementById("objectList");
-
-
-list.innerHTML = "";
-
+box.innerHTML="";
 
 objects
+.filter(o=>(o.name+" "+o.city+" "+o.number).toLowerCase().includes(q))
+.forEach(o=>{
 
-.filter(object =>
+const d=data(o.id);
 
-(
+box.innerHTML+=`
 
-object.name
-+ " "
-+ object.city
-+ " "
-+ object.number
+<div class="card">
 
-)
+<div><b>№${o.number}</b></div>
 
-.toLowerCase()
-.includes(search)
+<h3>${o.name}</h3>
 
-)
+<div>📍 ${o.city}</div>
 
-
-.forEach(object => {
-
-
-const data =
-getData(object.id);
-
-
-const card =
-document.createElement(
-"div"
-);
-
-
-card.className =
-"object-card";
-
-
-card.innerHTML = `
-
-<div class="object-number">
-
-Обект №${object.number}
-
-</div>
-
-
-<h2>
-${object.name}
-</h2>
-
-
-<div class="location">
-
-📍 ${object.city}
-
-</div>
-
-
-<div class="status
-${data.visited ? "yes" : "no"}">
-
-${data.visited
-? "🟢 Посетен"
-: "🔴 Не е посетен"}
-
-</div>
-
-
-<div class="checks">
-
-
-<label class="check">
-
-<input
-
-type="checkbox"
-
-${data.visited
-? "checked"
-: ""}
-
-onchange="
-updateObject(
-${object.id},
-'visited',
-this.checked
-)
-"
-
->
-
+<label>
+<input type="checkbox"
+${d.visited?"checked":""}
+onchange="save('${o.id}','visited',this.checked)">
 Посетен
-
 </label>
 
-
-<label class="check">
-
-<input
-
-type="checkbox"
-
-${data.stamp
-? "checked"
-: ""}
-
-onchange="
-updateObject(
-${object.id},
-'stamp',
-this.checked
-)
-"
-
->
-
-🖋️ Имам печат
-
+<label>
+<input type="checkbox"
+${d.stamp?"checked":""}
+onchange="save('${o.id}','stamp',this.checked)">
+Печат
 </label>
 
-
-<label class="check">
-
-<input
-
-type="checkbox"
-
-${data.mark
-? "checked"
-: ""}
-
-onchange="
-updateObject(
-${object.id},
-'mark',
-this.checked
-)
-"
-
->
-
-🎫 Имам марка
-
+<label>
+<input type="checkbox"
+${d.mark?"checked":""}
+onchange="save('${o.id}','mark',this.checked)">
+Марка
 </label>
 
-
-</div>
-
-
-<input
-
-class="date"
-
-type="date"
-
-value="${data.date || ""}"
-
-onchange="
-updateObject(
-${object.id},
-'date',
-this.value
-)
-"
-
->
-
+<input type="date"
+value="${d.date||""}"
+onchange="save('${o.id}','date',this.value)"
+style="width:100%;margin-top:8px;">
 
 <textarea
+placeholder="Бележка"
+onchange="save('${o.id}','note',this.value)"
+>${d.note||""}</textarea>
 
-class="note"
-
-placeholder="📝 Моя бележка..."
-
-onchange="
-updateObject(
-${object.id},
-'note',
-this.value
-)
-"
-
->${data.note || ""}</textarea>
-
+</div>
 
 `;
 
-
-list.appendChild(card);
-
-
 });
 
 }
 
+function updateStats(){
 
+let v=0,s=0,m=0,c=0;
 
-/* =========================
-   СТАТИСТИКА
-========================= */
+objects.forEach(o=>{
 
+const d=data(o.id);
 
-function updateStats() {
-
-let visited = 0;
-
-let stamps = 0;
-
-let marks = 0;
-
-let complete = 0;
-
-
-objects.forEach(object => {
-
-
-const data =
-getData(object.id);
-
-
-if (data.visited)
-visited++;
-
-
-if (data.stamp)
-stamps++;
-
-
-if (data.mark)
-marks++;
-
-
-if (
-
-data.visited
-&&
-data.stamp
-&&
-data.mark
-
-)
-
-complete++;
-
+if(d.visited)v++;
+if(d.stamp)s++;
+if(d.mark)m++;
+if(d.visited&&d.stamp&&d.mark)c++;
 
 });
 
-
-document
-.getElementById(
-"visitedCount"
-)
-.innerText =
-visited;
-
-
-document
-.getElementById(
-"stampCount"
-)
-.innerText =
-stamps;
-
-
-document
-.getElementById(
-"markCount"
-)
-.innerText =
-marks;
-
-
-document
-.getElementById(
-"completeCount"
-)
-.innerText =
-complete;
-
-
-const percentage =
-
-objects.length
-
-?
-
-(visited / objects.length)
-* 100
-
-: 0;
-
-
-document
-.getElementById(
-"progressBar"
-)
-.style.width =
-
-percentage + "%";
-
-
-if (visited >= 100) {
-
-document
-.getElementById(
-"achievementText"
-)
-.innerText =
-
-"🥇 100 посетени обекта!";
+document.getElementById("v").innerText=v;
+document.getElementById("s").innerText=s;
+document.getElementById("m").innerText=m;
+document.getElementById("c").innerText=c;
 
 }
 
-else if (visited >= 50) {
+function openTab(t){
 
-document
-.getElementById(
-"achievementText"
-)
-.innerText =
-
-"🥈 50 посетени обекта!";
-
-}
-
-else if (visited >= 25) {
-
-document
-.getElementById(
-"achievementText"
-)
-.innerText =
-
-"🥉 25 посетени обекта!";
-
-}
-
-else {
-
-document
-.getElementById(
-"achievementText"
-)
-.innerText =
-
-`Посетени: ${visited} / ${objects.length}`;
-
-}
-
-}
-
-
-
-/* =========================
-   КАРТА
-========================= */
-
-
-function createMap() {
-
-  map = L.map("map").setView([42.7339, 25.4858], 7);
-
-  L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {
-      attribution: "&copy; OpenStreetMap contributors"
-    }
-  ).addTo(map);
-
-  markers = [];
-
-  objects.forEach(object => {
-
-    // Ако няма координати - пропускаме
-    if (object.lat == null || object.lng == null) return;
-
-    const data = getData(object.id);
-
-    const icon = L.divIcon({
-      className: "",
-      html: `<div style="
-        width:18px;
-        height:18px;
-        border-radius:50%;
-        border:3px solid white;
-        background:${data.visited ? "#16a34a" : "#dc2626"};
-        box-shadow:0 2px 6px rgba(0,0,0,.4);
-      "></div>`,
-      iconSize: [18,18],
-      iconAnchor: [9,9]
-    });
-
-    const marker = L.marker([object.lat, object.lng], {
-      icon: icon
-    }).addTo(map);
-
-    marker.bindPopup(`
-      <div class="map-popup-title">${object.name}</div>
-      📍 ${object.city}<br>
-      ${data.visited ? "🟢 Посетен" : "🔴 Не е посетен"}
-    `);
-
-    markers.push(marker);
-
-  });
-
-}
-
-objects.forEach(object => {
-
-  if (
-    object.lat === null ||
-    object.lng === null
-  ) {
-    return;
-  }
-
-  const data = getData(object.id);
-
-  const marker =
-    L.marker([
-      object.lat,
-      object.lng
-    ]).addTo(map);
-
-  marker.bindPopup(`
-
-    <div class="map-popup-title">
-      ${object.name}
-    </div>
-
-    📍 ${object.city}
-
-    <br>
-
-    ${
-      data.visited
-        ? "🟢 Посетен"
-        : "🔴 Не е посетен"
-    }
-
-  `);
-
-  markers.push({
-    object,
-    marker
-  });
-
+["map","list","progress"].forEach(x=>{
+document.getElementById(x+"Page").classList.remove("active");
 });
 
-
-marker.bindPopup(`
-
-<div class="map-popup-title">
-
-${object.name}
-
-</div>
-
-📍 ${object.city}
-
-<br>
-
-${data.visited
-? "🟢 Посетен"
-: "🔴 Не е посетен"}
-
-`);
-
-
-markers.push({
-
-object,
-marker
-
+["b1","b2","b3"].forEach(x=>{
+document.getElementById(x).classList.remove("active");
 });
 
-
-});
-
+if(t=="map"){
+document.getElementById("mapPage").classList.add("active");
+document.getElementById("b1").classList.add("active");
+setTimeout(()=>map.invalidateSize(),100);
 }
 
-
-
-/* =========================
-   ЕКРАНИ
-========================= */
-
-
-function showScreen(screen) {
-
-
-document
-.querySelectorAll(".screen")
-.forEach(element =>
-
-element.classList.remove(
-"active"
-)
-
-);
-
-
-document
-.querySelectorAll(".nav-button")
-.forEach(element =>
-
-element.classList.remove(
-"active"
-)
-
-);
-
-
-if (screen === "map") {
-
-
-document
-.getElementById(
-"mapScreen"
-)
-.classList.add(
-"active"
-);
-
-
-document
-.getElementById(
-"navMap"
-)
-.classList.add(
-"active"
-);
-
-
-setTimeout(() => {
-
-if (map)
-
-map.invalidateSize();
-
-},100);
-
-
+if(t=="list"){
+document.getElementById("listPage").classList.add("active");
+document.getElementById("b2").classList.add("active");
 }
 
-
-if (screen === "objects") {
-
-
-document
-.getElementById(
-"objectsScreen"
-)
-.classList.add(
-"active"
-);
-
-
-document
-.getElementById(
-"navObjects"
-)
-.classList.add(
-"active"
-);
-
-
-renderObjects();
-
-
-}
-
-
-if (screen === "progress") {
-
-
-document
-.getElementById(
-"progressScreen"
-)
-.classList.add(
-"active"
-);
-
-
-document
-.getElementById(
-"navProgress"
-)
-.classList.add(
-"active"
-);
-
-
-updateStats();
-
-
+if(t=="progress"){
+document.getElementById("progressPage").classList.add("active");
+document.getElementById("b3").classList.add("active");
 }
 
 }
 
-
-
-/* =========================
-   ОБНОВЯВАНЕ
-========================= */
-
-
-function updateEverything() {
-
-renderObjects();
-
-updateStats();
-
+if("serviceWorker" in navigator){
+navigator.serviceWorker.register("service-worker.js");
 }
 
-
-
-/* =========================
-   СТАРТ
-========================= */
-
-
-loadObjects();
-
-
-
-if ("serviceWorker" in navigator) {
-
-navigator.serviceWorker.register(
-"./service-worker.js"
-);
-
-}
-
+load();
 
 </script>
 
