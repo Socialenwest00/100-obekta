@@ -1,56 +1,128 @@
 [
   {
-    "id":"1-rila",
-    "number":"1",
-    "name":"Рилски манастир",
-    "city":"Рила",
-    "lat":42.1337,
-    "lng":23.3402,
-    "hasStamp":true
+    "id": "1-rila",
+    "number": "1",
+    "name": "Рилски манастир",
+    "city": "Рила",
+    "lat": 42.1337,
+    "lng": 23.3402,
+    "hasStamp": true
   },
   {
-    "id":"72-bogorodica",
-    "number":"72",
-    "name":"Монумент „Света Богородица“",
-    "city":"Хасково",
-    "lat":41.9277,
-    "lng":25.5557,
-    "hasStamp":true
+    "id": "6a-pomorie",
+    "number": "6а",
+    "name": "Антична куполна гробница",
+    "city": "Поморие",
+    "lat": 42.5747,
+    "lng": 27.6250,
+    "hasStamp": true
   },
   {
-    "id":"84-agushevi",
-    "number":"84",
-    "name":"Агушеви конаци",
-    "city":"Могилица",
-    "lat":41.5033,
-    "lng":24.6632,
-    "hasStamp":true
+    "id": "24v-durankulak",
+    "number": "24в",
+    "name": "Археологически комплекс „Дуранкулак – Хаманджия“",
+    "city": "Шабла",
+    "lat": 43.6660,
+    "lng": 28.5370,
+    "hasStamp": true
   },
   {
-    "id":"54b-tuida",
-    "number":"54б",
-    "name":"Крепост Туида",
-    "city":"Сливен",
-    "lat":42.6874,
-    "lng":26.3306,
-    "hasStamp":true
+    "id": "41a-stadion",
+    "number": "41а",
+    "name": "Римски стадион",
+    "city": "Пловдив",
+    "lat": 42.1434,
+    "lng": 24.7498,
+    "hasStamp": true
   },
   {
-    "id":"85a-rozhen",
-    "number":"85а",
-    "name":"Обсерватория Рожен",
-    "city":"Рожен",
-    "lat":41.6933,
-    "lng":24.7385,
-    "hasStamp":true
+    "id": "41b-bazilika",
+    "number": "41б",
+    "name": "Малка раннохристиянска базилика",
+    "city": "Пловдив",
+    "lat": 42.1423,
+    "lng": 24.7552,
+    "hasStamp": true
   },
   {
-    "id":"41b-basilica",
-    "number":"41б",
-    "name":"Епископска базилика на Филипопол",
-    "city":"Пловдив",
-    "lat":42.1423,
-    "lng":24.7552,
-    "hasStamp":true
+    "id": "54b-tuida",
+    "number": "54б",
+    "name": "Антична крепост „Туида“",
+    "city": "Сливен",
+    "lat": 42.6874,
+    "lng": 26.3306,
+    "hasStamp": true
+  },
+  {
+    "id": "72-bogorodica",
+    "number": "72",
+    "name": "Монумент „Света Богородица“",
+    "city": "Хасково",
+    "lat": 41.9277,
+    "lng": 25.5557,
+    "hasStamp": true
+  },
+  {
+    "id": "72a-mezek",
+    "number": "72а",
+    "name": "Средновековна крепост Мезек",
+    "city": "с. Мезек",
+    "lat": 41.7397,
+    "lng": 26.0827,
+    "hasStamp": true
+  },
+  {
+    "id": "72a-grob",
+    "number": "72а",
+    "name": "Тракийска куполна гробница",
+    "city": "с. Мезек",
+    "lat": 41.7421,
+    "lng": 26.0870,
+    "hasStamp": true
+  },
+  {
+    "id": "72v-armira",
+    "number": "72в",
+    "name": "Антична вила „Армира“",
+    "city": "Ивайловград",
+    "lat": 41.5266,
+    "lng": 26.1274,
+    "hasStamp": true
+  },
+  {
+    "id": "72b-balchik",
+    "number": "72б",
+    "name": "Исторически музей",
+    "city": "Балчик",
+    "lat": 43.4068,
+    "lng": 28.1625,
+    "hasStamp": true
+  },
+  {
+    "id": "84-agushevi",
+    "number": "84",
+    "name": "Агушеви конаци",
+    "city": "с. Могилица",
+    "lat": 41.5033,
+    "lng": 24.6632,
+    "hasStamp": true
+  },
+  {
+    "id": "85a-rodope",
+    "number": "85а",
+    "name": "Музей на Родопския карст",
+    "city": "Чепеларе",
+    "lat": 41.7274,
+    "lng": 24.6847,
+    "hasStamp": true
+  },
+  {
+    "id": "85b-rozhen",
+    "number": "85б",
+    "name": "Национална астрономическа обсерватория – Рожен",
+    "city": "Рожен",
+    "lat": 41.6933,
+    "lng": 24.7385,
+    "hasStamp": true
   }
 ]
