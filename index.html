@@ -3,105 +3,240 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>100 НТО</title>
+
+<title>100 НТО 🇧🇬</title>
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#166534">
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 
 <style>
-body{
-margin:0;
-font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;
-background:#f5f5f5;
+* {
+  box-sizing: border-box;
 }
 
-header{
-background:#166534;
-color:white;
-padding:15px;
-text-align:center;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: #f4f6f5;
+  color: #222;
 }
 
-#map{
-height:55vh;
+header {
+  background: #166534;
+  color: white;
+  text-align: center;
+  padding: 15px 12px;
 }
 
-.tabs{
-display:flex;
-background:white;
-border-bottom:1px solid #ddd;
+header h1 {
+  margin: 0;
+  font-size: 22px;
 }
 
-.tabs button{
-flex:1;
-padding:12px;
-border:none;
-background:white;
-font-size:15px;
+header p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  opacity: .9;
 }
 
-.tabs button.active{
-color:#166534;
-font-weight:bold;
+nav {
+  display: flex;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.page{
-display:none;
-padding:12px;
+nav button {
+  flex: 1;
+  border: 0;
+  background: white;
+  padding: 12px 5px;
+  font-size: 13px;
 }
 
-.page.active{
-display:block;
+nav button.active {
+  color: #166534;
+  font-weight: bold;
+  border-bottom: 3px solid #166534;
 }
 
-.card{
-background:white;
-padding:14px;
-border-radius:14px;
-margin-bottom:12px;
-box-shadow:0 2px 6px rgba(0,0,0,.08);
+.screen {
+  display: none;
 }
 
-input[type=search]{
-width:100%;
-padding:12px;
-border-radius:10px;
-border:1px solid #ccc;
-margin-bottom:12px;
+.screen.active {
+  display: block;
 }
 
-label{
-display:flex;
-align-items:center;
-gap:8px;
-margin:8px 0;
+#map {
+  height: calc(100vh - 123px);
+  min-height: 450px;
 }
 
-textarea{
-width:100%;
-min-height:60px;
-margin-top:8px;
+.content {
+  max-width: 750px;
+  margin: auto;
+  padding: 12px;
 }
 
-.stats{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
+.search {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 16px;
+  margin-bottom: 12px;
 }
 
-.stat{
-background:white;
-padding:20px;
-border-radius:14px;
-text-align:center;
+.card {
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.07);
 }
 
-.big{
-font-size:28px;
-font-weight:bold;
-color:#166534;
+.card h2 {
+  margin: 4px 0;
+  font-size: 18px;
+}
+
+.number {
+  color: #777;
+  font-size: 13px;
+}
+
+.city {
+  color: #666;
+  font-size: 14px;
+  margin: 5px 0 12px;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.status.visited {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.notvisited {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 9px 0;
+}
+
+.check input {
+  width: 20px;
+  height: 20px;
+  accent-color: #166534;
+}
+
+.date,
+.note {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 9px;
+  font-family: inherit;
+}
+
+.note {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.stat {
+  background: white;
+  padding: 18px 8px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 2px 7px rgba(0,0,0,.07);
+}
+
+.stat-number {
+  font-size: 29px;
+  font-weight: bold;
+  color: #166534;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #666;
+}
+
+.progress-card {
+  background: white;
+  padding: 18px;
+  border-radius: 15px;
+  margin-top: 12px;
+}
+
+.progress-bg {
+  height: 14px;
+  background: #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.progress {
+  height: 100%;
+  width: 0;
+  background: #166534;
+  transition: width .3s;
+}
+
+.badge {
+  font-size: 18px;
+  margin-top: 12px;
+}
+
+.navigation {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 13px;
+  border-radius: 10px;
+  background: #166534;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.empty {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.leaflet-popup-content {
+  margin: 12px;
 }
 </style>
 </head>
@@ -109,235 +244,839 @@ color:#166534;
 <body>
 
 <header>
-<h2>🇧🇬 100 НТО</h2>
-<div>Моят личен туристически дневник</div>
+  <h1>🇧🇬 100 НТО</h1>
+  <p>Моят личен туристически дневник</p>
 </header>
 
-<div class="tabs">
-<button id="b1" class="active" onclick="openTab('map')">🗺️ Карта</button>
-<button id="b2" onclick="openTab('list')">📋 Обекти</button>
-<button id="b3" onclick="openTab('progress')">🏆 Прогрес</button>
-</div>
+<nav>
+  <button id="mapTab" class="active" onclick="showScreen('map')">
+    🗺️ Карта
+  </button>
 
-<div id="mapPage" class="page active">
-<div id="map"></div>
-</div>
+  <button id="objectsTab" onclick="showScreen('objects')">
+    📋 Обекти
+  </button>
 
-<div id="listPage" class="page">
-<input id="search" type="search" placeholder="Търси..." oninput="renderList()">
-<div id="list"></div>
-</div>
+  <button id="progressTab" onclick="showScreen('progress')">
+    🏆 Прогрес
+  </button>
+</nav>
 
-<div id="progressPage" class="page">
-<div class="stats">
 
-<div class="stat">
-<div id="v" class="big">0</div>
-Посетени
-</div>
+<section id="mapScreen" class="screen active">
+  <div id="map"></div>
+</section>
 
-<div class="stat">
-<div id="s" class="big">0</div>
-Печати
-</div>
 
-<div class="stat">
-<div id="m" class="big">0</div>
-Марки
-</div>
+<section id="objectsScreen" class="screen">
 
-<div class="stat">
-<div id="c" class="big">0</div>
-Комплект
-</div>
+  <div class="content">
 
-</div>
-</div>
+    <input
+      id="search"
+      class="search"
+      type="search"
+      placeholder="🔎 Търси обект, град или номер..."
+      oninput="renderObjects()"
+    >
+
+    <div id="objectList"></div>
+
+  </div>
+
+</section>
+
+
+<section id="progressScreen" class="screen">
+
+  <div class="content">
+
+    <div class="stats">
+
+      <div class="stat">
+        <div id="visitedCount" class="stat-number">0</div>
+        <div class="stat-label">🟢 Посетени</div>
+      </div>
+
+      <div class="stat">
+        <div id="stampCount" class="stat-number">0</div>
+        <div class="stat-label">🖋️ Печати</div>
+      </div>
+
+      <div class="stat">
+        <div id="markCount" class="stat-number">0</div>
+        <div class="stat-label">🎫 Марки</div>
+      </div>
+
+      <div class="stat">
+        <div id="completeCount" class="stat-number">0</div>
+        <div class="stat-label">⭐ Всичко</div>
+      </div>
+
+    </div>
+
+
+    <div class="progress-card">
+
+      <h2>🏆 Моето приключение</h2>
+
+      <div id="progressText">
+        0 посещения
+      </div>
+
+      <div class="progress-bg">
+        <div id="progressBar" class="progress"></div>
+      </div>
+
+      <div id="badgeText" class="badge">
+        Започни приключението! 🇧🇬
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+<script src="data.js"></script>
+
 <script>
 
-let objects=[];
-let map;
-let layer;
+let objects = [];
+let map = null;
+let markersLayer = null;
 
-async function load(){
 
-const r=await fetch("objects.json");
-objects=await r.json();
+/* =========================
+   LOCAL DATA
+========================= */
 
-map=L.map("map").setView([42.7339,25.4858],7);
+function getData(id) {
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
-attribution:"© OpenStreetMap"
-}).addTo(map);
+  try {
 
-layer=L.layerGroup().addTo(map);
+    return JSON.parse(
+      localStorage.getItem("obj-" + id) || "{}"
+    );
 
-drawMarkers();
-renderList();
-updateStats();
+  } catch {
 
-}
+    return {};
 
-function data(id){
-return JSON.parse(localStorage.getItem("obj-"+id)||"{}");
-}
-
-function save(id,key,val){
-const d=data(id);
-d[key]=val;
-localStorage.setItem("obj-"+id,JSON.stringify(d));
-drawMarkers();
-renderList();
-updateStats();
-}
-
-function drawMarkers(){
-
-layer.clearLayers();
-
-objects.forEach(o=>{
-
-if(o.lat==null||o.lng==null)return;
-
-const d=data(o.id);
-
-const color=d.visited?"#16a34a":"#dc2626";
-
-const icon=L.divIcon({
-className:"",
-html:`<div style="width:18px;height:18px;border-radius:50%;background:${color};border:3px solid white;"></div>`,
-iconSize:[18,18],
-iconAnchor:[9,9]
-});
-
-L.marker([o.lat,o.lng],{icon})
-.addTo(layer)
-.bindPopup(`<b>${o.name}</b><br>${o.city}`);
-
-});
+  }
 
 }
 
-function renderList(){
 
-const q=document.getElementById("search").value.toLowerCase();
-const box=document.getElementById("list");
+function saveData(id, key, value) {
 
-box.innerHTML="";
+  const current = getData(id);
 
-objects
-.filter(o=>(o.name+" "+o.city+" "+o.number).toLowerCase().includes(q))
-.forEach(o=>{
+  current[key] = value;
 
-const d=data(o.id);
+  localStorage.setItem(
+    "obj-" + id,
+    JSON.stringify(current)
+  );
 
-box.innerHTML+=`
-
-<div class="card">
-
-<div><b>№${o.number}</b></div>
-
-<h3>${o.name}</h3>
-
-<div>📍 ${o.city}</div>
-
-<label>
-<input type="checkbox"
-${d.visited?"checked":""}
-onchange="save('${o.id}','visited',this.checked)">
-Посетен
-</label>
-
-<label>
-<input type="checkbox"
-${d.stamp?"checked":""}
-onchange="save('${o.id}','stamp',this.checked)">
-Печат
-</label>
-
-<label>
-<input type="checkbox"
-${d.mark?"checked":""}
-onchange="save('${o.id}','mark',this.checked)">
-Марка
-</label>
-
-<input type="date"
-value="${d.date||""}"
-onchange="save('${o.id}','date',this.value)"
-style="width:100%;margin-top:8px;">
-
-<textarea
-placeholder="Бележка"
-onchange="save('${o.id}','note',this.value)"
->${d.note||""}</textarea>
-
-</div>
-
-`;
-
-});
+  refreshEverything();
 
 }
 
-function updateStats(){
 
-let v=0,s=0,m=0,c=0;
+/* =========================
+   LOAD OBJECTS
+========================= */
 
-objects.forEach(o=>{
+async function loadObjects() {
 
-const d=data(o.id);
+  try {
 
-if(d.visited)v++;
-if(d.stamp)s++;
-if(d.mark)m++;
-if(d.visited&&d.stamp&&d.mark)c++;
+    const response = await fetch("./objects.json");
 
-});
+    if (!response.ok) {
+      throw new Error("objects.json не е намерен");
+    }
 
-document.getElementById("v").innerText=v;
-document.getElementById("s").innerText=s;
-document.getElementById("m").innerText=m;
-document.getElementById("c").innerText=c;
+    objects = await response.json();
+
+    createMap();
+
+    renderObjects();
+
+    updateStats();
+
+  } catch (error) {
+
+    console.error(error);
+
+    document.getElementById("objectList").innerHTML = `
+
+      <div class="empty">
+
+        <h2>⚠️ Грешка</h2>
+
+        <p>
+          Не успях да заредя objects.json.
+        </p>
+
+        <small>
+          Провери дали файлът се казва точно
+          <b>objects.json</b>.
+        </small>
+
+      </div>
+
+    `;
+
+  }
 
 }
 
-function openTab(t){
 
-["map","list","progress"].forEach(x=>{
-document.getElementById(x+"Page").classList.remove("active");
-});
+/* =========================
+   MAP
+========================= */
 
-["b1","b2","b3"].forEach(x=>{
-document.getElementById(x).classList.remove("active");
-});
+function createMap() {
 
-if(t=="map"){
-document.getElementById("mapPage").classList.add("active");
-document.getElementById("b1").classList.add("active");
-setTimeout(()=>map.invalidateSize(),100);
+  map = L.map("map").setView(
+    [42.7339, 25.4858],
+    7
+  );
+
+
+  L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      attribution: "&copy; OpenStreetMap contributors"
+    }
+  ).addTo(map);
+
+
+  markersLayer = L.layerGroup().addTo(map);
+
+
+  drawMarkers();
+
 }
 
-if(t=="list"){
-document.getElementById("listPage").classList.add("active");
-document.getElementById("b2").classList.add("active");
+
+function drawMarkers() {
+
+  if (!markersLayer) return;
+
+  markersLayer.clearLayers();
+
+
+  objects.forEach(object => {
+
+    if (
+      object.lat == null ||
+      object.lng == null ||
+      isNaN(Number(object.lat)) ||
+      isNaN(Number(object.lng))
+    ) {
+
+      return;
+
+    }
+
+
+    const saved = getData(object.id);
+
+
+    const visited = saved.visited === true;
+
+
+    const color =
+      visited
+        ? "#16a34a"
+        : "#dc2626";
+
+
+    const icon = L.divIcon({
+
+      className: "",
+
+      html: `
+
+        <div style="
+          width:20px;
+          height:20px;
+          border-radius:50%;
+          background:${color};
+          border:3px solid white;
+          box-shadow:0 2px 7px rgba(0,0,0,.45);
+        "></div>
+
+      `,
+
+      iconSize: [20,20],
+
+      iconAnchor: [10,10]
+
+    });
+
+
+    const marker = L.marker(
+      [
+        Number(object.lat),
+        Number(object.lng)
+      ],
+      {
+        icon: icon
+      }
+    );
+
+
+    marker.addTo(markersLayer);
+
+
+    const navigationUrl =
+      `https://maps.apple.com/?ll=${object.lat},${object.lng}`;
+
+
+    marker.bindPopup(`
+
+      <div style="min-width:200px">
+
+        <b>${escapeHtml(object.name)}</b>
+
+        <br>
+
+        📍 ${escapeHtml(object.city)}
+
+        <br><br>
+
+        ${
+          visited
+            ? "🟢 Посетен"
+            : "🔴 Не е посетен"
+        }
+
+        <br>
+
+        ${
+          saved.stamp
+            ? "🖋️ Печат ✓"
+            : "🖋️ Няма печат"
+        }
+
+        <br>
+
+        ${
+          saved.mark
+            ? "🎫 Марка ✓"
+            : "🎫 Няма марка"
+        }
+
+        <br><br>
+
+        <a
+          class="navigation"
+          href="${navigationUrl}"
+          target="_blank"
+        >
+          📍 Навигация
+        </a>
+
+      </div>
+
+    `);
+
+  });
+
 }
 
-if(t=="progress"){
-document.getElementById("progressPage").classList.add("active");
-document.getElementById("b3").classList.add("active");
-}
+
+/* =========================
+   OBJECT LIST
+========================= */
+
+function renderObjects() {
+
+  const list =
+    document.getElementById("objectList");
+
+  if (!list) return;
+
+
+  const search =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  const filtered =
+    objects.filter(object => {
+
+      const text =
+        (
+          object.name +
+          " " +
+          object.city +
+          " " +
+          object.number
+        ).toLowerCase();
+
+      return text.includes(search);
+
+    });
+
+
+  list.innerHTML = "";
+
+
+  if (filtered.length === 0) {
+
+    list.innerHTML = `
+
+      <div class="empty">
+        Няма намерени обекти.
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  filtered.forEach(object => {
+
+    const saved =
+      getData(object.id);
+
+
+    const visited =
+      saved.visited === true;
+
+
+    const card =
+      document.createElement("div");
+
+
+    card.className = "card";
+
+
+    const navigation =
+      object.lat != null &&
+      object.lng != null
+
+      ? `
+
+        <a
+          class="navigation"
+          href="https://maps.apple.com/?ll=${object.lat},${object.lng}"
+          target="_blank"
+        >
+          📍 Отвори в Apple Maps
+        </a>
+
+      `
+
+      : "";
+
+
+    card.innerHTML = `
+
+      <div class="number">
+        Обект №${escapeHtml(object.number)}
+      </div>
+
+      <h2>
+        ${escapeHtml(object.name)}
+      </h2>
+
+      <div class="city">
+        📍 ${escapeHtml(object.city)}
+      </div>
+
+
+      <div class="status ${
+        visited
+          ? "visited"
+          : "notvisited"
+      }">
+
+        ${
+          visited
+            ? "🟢 Посетен"
+            : "🔴 Не е посетен"
+        }
+
+      </div>
+
+
+      <label class="check">
+
+        <input
+          type="checkbox"
+          ${
+            visited
+              ? "checked"
+              : ""
+          }
+
+          onchange="
+            saveData(
+              '${object.id}',
+              'visited',
+              this.checked
+            )
+          "
+        >
+
+        Посетен
+
+      </label>
+
+
+      <label class="check">
+
+        <input
+          type="checkbox"
+          ${
+            saved.stamp
+              ? "checked"
+              : ""
+          }
+
+          onchange="
+            saveData(
+              '${object.id}',
+              'stamp',
+              this.checked
+            )
+          "
+        >
+
+        🖋️ Имам печат
+
+      </label>
+
+
+      <label class="check">
+
+        <input
+          type="checkbox"
+          ${
+            saved.mark
+              ? "checked"
+              : ""
+          }
+
+          onchange="
+            saveData(
+              '${object.id}',
+              'mark',
+              this.checked
+            )
+          "
+        >
+
+        🎫 Имам марка
+
+      </label>
+
+
+      <label>
+
+        📅 Дата
+
+        <input
+          class="date"
+          type="date"
+          value="${saved.date || ""}"
+
+          onchange="
+            saveData(
+              '${object.id}',
+              'date',
+              this.value
+            )
+          "
+        >
+
+      </label>
+
+
+      <textarea
+        class="note"
+        placeholder="📝 Моя бележка..."
+        onchange="
+          saveData(
+            '${object.id}',
+            'note',
+            this.value
+          )
+        "
+      >${escapeHtml(saved.note || "")}</textarea>
+
+
+      ${navigation}
+
+    `;
+
+
+    list.appendChild(card);
+
+  });
 
 }
 
-if("serviceWorker" in navigator){
-navigator.serviceWorker.register("service-worker.js");
+
+/* =========================
+   PROGRESS
+========================= */
+
+function updateStats() {
+
+  let visited = 0;
+  let stamps = 0;
+  let marks = 0;
+  let complete = 0;
+
+
+  objects.forEach(object => {
+
+    const saved =
+      getData(object.id);
+
+
+    if (saved.visited)
+      visited++;
+
+
+    if (saved.stamp)
+      stamps++;
+
+
+    if (saved.mark)
+      marks++;
+
+
+    if (
+      saved.visited &&
+      saved.stamp &&
+      saved.mark
+    ) {
+
+      complete++;
+
+    }
+
+  });
+
+
+  document
+    .getElementById("visitedCount")
+    .textContent = visited;
+
+
+  document
+    .getElementById("stampCount")
+    .textContent = stamps;
+
+
+  document
+    .getElementById("markCount")
+    .textContent = marks;
+
+
+  document
+    .getElementById("completeCount")
+    .textContent = complete;
+
+
+  const percentage =
+    objects.length
+      ? (visited / objects.length) * 100
+      : 0;
+
+
+  document
+    .getElementById("progressBar")
+    .style.width =
+      percentage + "%";
+
+
+  document
+    .getElementById("progressText")
+    .textContent =
+      `${visited} / ${objects.length} посетени`;
+
+
+  let badge =
+    "Започни приключението! 🇧🇬";
+
+
+  if (visited >= 100) {
+
+    badge =
+      "🥇 100 посещения — златно ниво!";
+
+  } else if (visited >= 50) {
+
+    badge =
+      "🥈 50 посещения — сребърно ниво!";
+
+  } else if (visited >= 25) {
+
+    badge =
+      "🥉 25 посещения — бронзово ниво!";
+
+  }
+
+
+  document
+    .getElementById("badgeText")
+    .textContent = badge;
+
 }
 
-load();
+
+/* =========================
+   REFRESH
+========================= */
+
+function refreshEverything() {
+
+  drawMarkers();
+
+  renderObjects();
+
+  updateStats();
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function showScreen(screen) {
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(element => {
+      element.classList.remove("active");
+    });
+
+
+  document
+    .querySelectorAll("nav button")
+    .forEach(button => {
+      button.classList.remove("active");
+    });
+
+
+  if (screen === "map") {
+
+    document
+      .getElementById("mapScreen")
+      .classList.add("active");
+
+
+    document
+      .getElementById("mapTab")
+      .classList.add("active");
+
+
+    setTimeout(() => {
+
+      if (map) {
+        map.invalidateSize();
+      }
+
+    }, 100);
+
+  }
+
+
+  if (screen === "objects") {
+
+    document
+      .getElementById("objectsScreen")
+      .classList.add("active");
+
+
+    document
+      .getElementById("objectsTab")
+      .classList.add("active");
+
+
+    renderObjects();
+
+  }
+
+
+  if (screen === "progress") {
+
+    document
+      .getElementById("progressScreen")
+      .classList.add("active");
+
+
+    document
+      .getElementById("progressTab")
+      .classList.add("active");
+
+
+    updateStats();
+
+  }
+
+}
+
+
+/* =========================
+   SECURITY / HTML
+========================= */
+
+function escapeHtml(value) {
+
+  return String(value)
+
+    .replaceAll("&", "&amp;")
+
+    .replaceAll("<", "&lt;")
+
+    .replaceAll(">", "&gt;")
+
+    .replaceAll('"', "&quot;")
+
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/* =========================
+   SERVICE WORKER
+========================= */
+
+if ("serviceWorker" in navigator) {
+
+  navigator.serviceWorker
+    .register("./service-worker.js")
+    .catch(error => {
+      console.log("Service worker:", error);
+    });
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadObjects();
 
 </script>
 
